@@ -1,0 +1,50 @@
+/* styles.css */
+
+/* Navigation Buttons */
+.nav-button {
+    background-color: #0a1e3f;
+    color: #ffffff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+.nav-button:hover {
+    background-color: #132c5a;
+}
+
+
+[data-testid="stSidebar"] {
+    background-color: rgba(10, 30, 63, 0.7) !important; /* azul marino translúcido */
+    backdrop-filter: blur(4px); /* efecto cristal si el navegador lo soporta */
+    -webkit-backdrop-filter: blur(4px);
+}
+
+
+html, body, .stApp {
+    color: #ffffff !important;
+    font-family: 'Helvetica Neue', sans-serif;
+}
+
+h1, h2, h3, h4 {
+    color: #FFD700 !important;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+}
+
+p, div, span {
+    color: #ffffff !important;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+}
+
+.sidebar .sidebar-content {
+    background-color: rgba(10, 30, 63, 0.85);
+}
+
+/* Hide built-in page navigation menu */
+[data-testid="stSidebarNav"] {
+    display: none !important;
+}
