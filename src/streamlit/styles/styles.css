@@ -48,3 +48,36 @@ p, div, span {
 [data-testid="stSidebarNav"] {
     display: none !important;
 }
+
+/* Tarjeta visual para bloques de contenido */
+.block-card {
+    background-color: rgba(10, 10, 10, 0.75); /* más opaco */
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
+    margin-bottom: 1.5rem;
+}
+
+/* Sidebar sin padding artificial */
+[data-testid="stSidebar"] > div:first-child {
+    padding: 1.2rem 1.5rem !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    min-height: 100vh;
+}
+
+/* Logo perfectamente colocado arriba */
+.sidebar-logo-container {
+    margin-top: -0.5rem;
+    margin-bottom: 0.2rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.sidebar-logo-container img {
+    width: 180px;
+    height: auto;
+}
