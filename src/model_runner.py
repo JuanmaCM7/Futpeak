@@ -101,9 +101,21 @@ def predict_and_project_player(player_name: str):
     group = predict_peak_group(df_model)
     curve = get_curve_by_group(group)
 
-    last_year = seasonal['year_since_debut'].max()
-    last_rating = seasonal.loc[seasonal['year_since_debut'] == last_year, 'rating_per_90'].values[0]
-    ref = curve.loc[curve['year_since_debut'] == last_year, 'rating_avg'].values[0]
-    curve['projection'] = curve['rating_avg'] + (last_rating - ref)
+    # Proyección ajustada
+    try:
+        last_year = seasonal['year_since_debut'].astype(int).max()
+        last_rating = seasonal.loc[seasonal['year_since_debut'] == last_year, 'rating_per_90'].values[0]
+        ref = curve.loc[curve['year_since_debut'] == last_year, 'rating_avg'].values[0]
+        curve['projection'] = curve['rating_avg'] + (last_rating - ref)
+    except Exception as e:
+        print(f"❌ Error en proyección de {player_name}: {e}")
+        curve['projection'] = curve['rating_avg']
+
+    # ✅ Forzar tipo y filtrar correctamente
+    seasonal['year_since_debut'] = pd.to_numeric(seasonal['year_since_debut'], errors='coerce').fillna(0).astype(int)
+    curve['year_since_debut'] = pd.to_numeric(curve['year_since_debut'], errors='coerce').fillna(0).astype(int)
+
+    seasonal = seasonal[seasonal['year_since_debut'] <= 13]
+    curve = curve[curve['year_since_debut'] <= 13]
 
     return group, seasonal, curve
