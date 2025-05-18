@@ -12,7 +12,8 @@ def assign_position_group(position):
     return "UNKNOWN"
 
 
-def calculate_rating_per_90(row):
+
+def compute_rating_row(row):
     score = (
         row['Goals'] * 5 +
         row['Assists'] * 4 +
@@ -22,3 +23,4 @@ def calculate_rating_per_90(row):
         row['Red_cards'] * 2
     )
     return score / (row['Minutes'] / 90) if row['Minutes'] > 0 else 0
+

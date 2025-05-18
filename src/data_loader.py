@@ -22,14 +22,16 @@ def load_future_metadata():
     return pd.read_csv(DATA_DIR / "future_stars_cleaned_metadata.csv")
 
 
-def get_matchlogs_by_player(name, future=True):
+def get_matchlogs_by_player(player_id, future=True):
     df = load_future_matchlogs() if future else load_cleaned_matchlogs()
-    return df[df["Player_name"].str.lower() == name.lower()]
-
+    return df[df["Player_ID"] == player_id]
 
 def get_metadata_by_player(name, future=True):
     df = load_future_metadata() if future else load_cleaned_metadata()
-    return df[df["Player_name"].str.lower() == name.lower()].iloc[0].to_dict()
+    row = df[df["Player_name"].str.lower() == name.lower()]
+    print("🧠 Metadata encontrada:", row.head(1).to_dict())
+    return row.iloc[0].to_dict() if not row.empty else {}
+
 
 def get_name_id_mapping(future=True):
     df = load_future_metadata() if future else load_cleaned_metadata()
