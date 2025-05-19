@@ -65,6 +65,47 @@ def plot_player_stats(player_id):
 
     return fig
 
+def plot_minutes_per_year(player_id) -> plt.Figure:
+    """
+    Bar chart de minutos totales por año desde el debut.
+    """
+    import pandas as pd
+    from player_processing import build_player_df, aggregate_stats_by_year
+    from data_loader import get_metadata_by_player
+
+    # 1) Agrupamos los datos igual que en G+A
+    df = build_player_df(player_id)
+    stats_df = aggregate_stats_by_year(df)
+
+    # 2) Nombre para título
+    meta = get_metadata_by_player(player_id)
+    player_name = meta.get("Player_name", player_id)
+
+    if stats_df is None or stats_df.empty:
+        return None
+
+    # 3) Tipos seguros
+    stats_df = stats_df.copy()
+    stats_df["year_since_debut"] = stats_df["year_since_debut"].astype(int)
+    stats_df["Minutes"] = stats_df["Minutes"].astype(float)
+
+    # 4) Plot
+    sns.set_theme(style="whitegrid")
+    fig, ax = plt.subplots(figsize=(7, 4))
+    sns.barplot(
+        data=stats_df,
+        x="year_since_debut",
+        y="Minutes",
+        color="#66bb6a",
+        ax=ax
+    )
+    ax.set_title(f"Minutos por año - {player_name}", fontsize=11, weight="bold")
+    ax.set_xlabel("Año desde debut")
+    ax.set_ylabel("Minutos jugados")
+    ax.grid(True, linestyle="--", alpha=0.5)
+    fig.tight_layout()
+    return fig
+
 def plot_rating_projection(player_name: str, player_seasonal: pd.DataFrame, group_curve: pd.DataFrame, pred_label: str):
     sns.set_theme(style="whitegrid")
 
