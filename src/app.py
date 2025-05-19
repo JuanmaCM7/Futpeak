@@ -49,7 +49,14 @@ with st.sidebar:
             unsafe_allow_html=True
         )
 
-    st.markdown("## ℹ️ ¿Cómo funciona Futpeak?")
+    # Un pequeño salto
+    st.markdown("<div style='height:20px;'></div>", unsafe_allow_html=True)
+
+    # Luego el título
+    st.markdown(
+        "<h2 style='white-space: nowrap; margin-bottom: 1rem;'>ℹ️ ¿Cómo funciona Futpeak?</h2>",
+        unsafe_allow_html=True
+    )
     st.info("""
         1. Selecciona un jugador del menú desplegable. 
         2. Visualiza al instante su resumen de carrera y proyección.  
