@@ -62,10 +62,10 @@ player_conclusions_by_id = {
         "mejor año será 2025, manteniendo buen ritmo hasta 2027."
     ),
     "6b9960cf": (
-        "Warren Zaire-Emery debutó en 2021 con un rating modesto, pero en 2022 dio el salto superando la media de su "
-        "grupo de “jugadores medios”. Aunque en 2023 y 2024 su curva se estabilizó justo en la proyección ajustada, "
-        "ha demostrado consistencia defensiva y capacidad de adaptación. Según nuestro modelo, su peak year llegará "
-        "en 2025 y podría mantenerse en niveles destacados hasta 2027."
+        "Warren Zaire-Emery debutó en 2021 con un rating aún incipiente, pero en 2022 dio un salto de calidad que lo posicionó"
+        "por encima de la media de su grupo de “jugadores medios”. A lo largo de 2023 y 2024, su evolución se estabilizó"
+        "en torno a la proyección ajustada, mostrando consistencia, madurez táctica y fiabilidad en entornos competitivos."
+        "Según nuestro modelo, su peak year llegará en 2025, y se espera que mantenga un rendimiento sostenido hasta al menos 2027."
     ),
 }
 
@@ -116,7 +116,7 @@ with st.sidebar:
             white-space: nowrap;
             margin: 0 0 0.5rem 0;
             color: #FFD700;
-            font-size: 1.2rem;
+            font-size: 1rem;
         '>
             ℹ️ ¿Cómo funciona Futpeak?
         </h2>
@@ -147,6 +147,16 @@ with st.sidebar:
         index=0,
         label_visibility="collapsed"
     )
+    
+    st.markdown("""
+    <style>
+    /* ✅ OPCIONES DESPLEGADAS: todas en negro */
+    div[data-baseweb="menu"] [role="option"] {
+        color: black !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
     id_series = metadata.loc[metadata["Player_name"] == selected_player, "Player_ID"]
     player_id = id_series.iloc[0] if not id_series.empty else None
     # Nota informativa en desarrollo
@@ -164,6 +174,26 @@ with st.sidebar:
         """,
         unsafe_allow_html=True
     )
+    st.markdown(
+        """
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfuuXMKtFDsAtQzLXoXuIlxOKQM3oPiEQtpyBJrfbxazAk2GQ/viewform?usp=dialog" target="_blank">
+            <button style="
+                background-color:#FFD700;
+                color:black;
+                font-weight:bold;
+                padding:0.5em 1em;
+                border:none;
+                border-radius:8px;
+                font-size:1rem;
+                cursor:pointer;
+                width:100%;
+            ">
+                📝 Enviar feedback
+            </button>
+        </a>
+        """,
+        unsafe_allow_html=True
+    )
 # Título principal
 st.markdown(
     """
@@ -177,7 +207,7 @@ st.markdown(
 )
 
 # Estructura de columnas: mantenemos ratio original (0.5, 1, 1.8)
-col1, col2, col3 = st.columns([0.6, 1, 1.8], gap="large")
+col1, col2, col3 = st.columns([0.7, 1, 1.8], gap="large")
 
 with col1:
     
