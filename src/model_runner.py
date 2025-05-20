@@ -1,9 +1,5 @@
 import pandas as pd
-from player_processing import (
-    build_player_df,
-    calculate_rating_per_90,
-    build_annual_profile
-)
+from player_processing import build_player_df, calculate_rating_per_90, build_annual_profile
 from model_utils import load_model_assets
 
 # Cargar modelos y componentes
@@ -12,12 +8,40 @@ model, le, df_curves, model_features = load_model_assets()
 # -------------------------
 # Preparar input del jugador para el modelo
 # -------------------------
-def prepare_features(player_id: str) -> tuple:
-    player_df = build_player_df(player_id)
-    player_df = calculate_rating_per_90(player_df)
-    player_model_df, seasonal_df = build_annual_profile(player_df)
-    model_input = player_model_df.reindex(columns=model_features, fill_value=0)
-    return model_input, seasonal_df
+
+def prepare_features(player_id: str):
+    df = build_player_df(player_id)
+
+    print(f"\n🧪 HEAD desde Streamlit para {player_id}:")
+    print(df[["Date", "Minutes", "Goals", "Assists", "Age"]].head())
+
+    # Asegúrate Date es datetime (build_player_df ya lo hace, pero por si acaso):
+    df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
+
+    # Calcula rating_por_90
+    df = calculate_rating_per_90(df)
+
+    player_model_df, seasonal_df = build_annual_profile(df)
+
+    # Asegúrate de que es UNA SOLA FILA
+    if player_model_df.shape[0] != 1:
+        raise ValueError(f"❌ Error: el perfil vectorizado tiene {player_model_df.shape[0]} filas. Esperada 1.")
+
+    X_input = (
+        player_model_df
+        .reindex(columns=model_features, fill_value=0)
+        .mean(axis=0)
+        .to_frame()
+        .T
+        .reindex(columns=model_features, fill_value=0)
+    )
+
+
+    print(f"🧠 Vector model input para {player_id} (Streamlit):")
+    print(player_model_df.T)
+
+    return X_input, seasonal_df
+
 
 # -------------------------
 # Predecir grupo de evolución
@@ -29,7 +53,10 @@ def predict_peak_group(df_model: pd.DataFrame) -> str:
 # -------------------------
 # Función modularizada para predecir grupo (desde notebook o app)
 # -------------------------
-def predict_player_group(model, label_encoder, model_columns, player_model_df):
+
+def predict_player_group(model, label_encoder, model_columns, player_model_df, player_id):
+    print(f"🧠 ID actual: {player_id}")
+    print(f"🎯 Datos pasados al modelo:\n{X_input.T}")
     X_input = player_model_df.reindex(columns=model_columns, fill_value=0)
     pred_encoded = model.predict(X_input)[0]
     return label_encoder.inverse_transform([pred_encoded])[0]
@@ -38,9 +65,9 @@ def predict_player_group(model, label_encoder, model_columns, player_model_df):
 # Obtener curva del grupo predicho
 # -------------------------
 def get_curve_by_group(group: str) -> pd.DataFrame:
-    group_clean = group.strip().lower()
-    df_curves['peak_group'] = df_curves['peak_group'].astype(str).str.strip().str.lower()
-    return df_curves[df_curves['peak_group'] == group_clean].copy()
+    print("🧪 Buscando grupo:", group)
+    print("📊 Valores únicos en df_curves:", df_curves['peak_group'].unique())
+    return df_curves[df_curves['peak_group'] == group].copy()
 
 
 # -------------------------
@@ -62,19 +89,17 @@ def adjust_projection(group_curve: pd.DataFrame, player_seasonal: pd.DataFrame) 
 # -------------------------
 # Predicción completa + ajuste de curva
 # -------------------------
-def predict_and_project_player(player_name: str):
+def predict_and_project_player(player_id: str):
     from data_loader import load_future_metadata
 
     metadata = load_future_metadata()
-    player_id = metadata[metadata['Player_name'] == player_name]['Player_ID'].values[0]
+    player_name = metadata[metadata['Player_ID'] == player_id]['Player_name'].values[0]
     df_model, seasonal = prepare_features(player_id)
+    print("🧪 INPUT final que se envía al modelo:")
+    print(df_model.T)
+
     group = predict_peak_group(df_model)
-
-    print("🧠 Grupo predicho:", group)
-    print("🎯 Grupos disponibles en curvas:", df_curves['peak_group'].unique())
-
     curve = get_curve_by_group(group)
-
 
     # Ajustar proyección
     try:

@@ -1,5 +1,4 @@
 /* ---------- BASE ----------- */
-
 [data-testid="stSidebar"] {
     background-color: rgba(10, 30, 63, 0.7) !important;
     backdrop-filter: blur(4px);
@@ -21,8 +20,6 @@ h1, h2, h3, h4 {
 }
 
 /* ---------- TEXTOS VISIBLES ---------- */
-
-/* Sidebar: textos normales blancos */
 [data-testid="stSidebar"] p,
 [data-testid="stSidebar"] div,
 [data-testid="stSidebar"] span {
@@ -30,7 +27,7 @@ h1, h2, h3, h4 {
     text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
 }
 
-/* Tarjetas .block-card */
+/* ---------- TARJETAS (.block-card) ---------- */
 .block-card {
     background-color: rgba(10, 10, 10, 0.75);
     padding: 1.5rem;
@@ -38,7 +35,6 @@ h1, h2, h3, h4 {
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
     margin-bottom: 1.5rem;
 }
-
 .block-card p,
 .block-card span,
 .block-card div {
@@ -46,33 +42,15 @@ h1, h2, h3, h4 {
     text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
 }
 
-/* ---------- SELECTBOX CORREGIDO ---------- */
-
-div[data-baseweb="select"] {
-    background-color: white !important;
-    border-radius: 6px;
-}
-
-div[data-baseweb="select"] input {
-    color: black !important;
-    font-weight: 500;
-}
-
-div[data-baseweb="menu"] div[role="option"] {
-    color: black !important;
-}
-
-/* ---------- LOGO Y LAYOUT ---------- */
-
+/* ---------- LOGO Y LAYOUT SIDEBAR ---------- */
 [data-testid="stSidebar"] > div:first-child {
-    padding: 1.2rem 1.5rem !important;
+    padding: 4.5rem 1.5rem !important;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     gap: 1.5rem;
     min-height: 100vh;
 }
-
 .sidebar-logo-container {
     margin-top: -0.5rem;
     margin-bottom: 0.2rem;
@@ -80,45 +58,43 @@ div[data-baseweb="menu"] div[role="option"] {
     justify-content: flex-start;
     align-items: center;
 }
-
 .sidebar-logo-container img {
     width: 180px;
     height: auto;
 }
-
 img {
     border-radius: 50%;
     border: 3px solid #FFD700;
 }
-
-/* Ocultar navegación de páginas */
 [data-testid="stSidebarNav"] {
     display: none !important;
 }
 
-/* ---------- SELECTBOX: texto negro sin romper estilos ---------- */
-
-div[data-testid="stSidebar"] div[data-baseweb="select"] {
+/* ---------- SELECTBOX ESTILOS ---------- */
+/* 1) Contenedor del select */
+div[data-baseweb="select"] {
     background-color: white !important;
-    border-radius: 6px;
+    border-radius: 6px !important;
 }
-
-div[data-testid="stSidebar"] div[data-baseweb="select"] input {
+/* 2) Valor seleccionado */
+div[data-testid="stSidebar"] div[data-baseweb="select"] .css-1uccc91-singleValue {
+    color: black !important;
+    opacity: 1 !important;
+    font-weight: 600 !important;
+}
+/* 3) Placeholder antes de selección */
+div[data-testid="stSidebar"] div[data-baseweb="select"] .css-1n76uvr-placeholder {
     color: black !important;
     opacity: 1 !important;
     font-weight: 500 !important;
 }
-
+/* 4) Opciones desplegables */
 div[data-testid="stSidebar"] div[data-baseweb="menu"] div[role="option"] {
     color: black !important;
+    background-color: white !important;
 }
-
-/* Forzar texto negro del selectbox en sidebar */
-div[data-testid="stSidebar"] div[data-baseweb="select"] input {
-    color: black !important;
-    font-weight: 600 !important;
-    opacity: 1 !important;
-    text-shadow: none !important;
+/* 5) Quitar bordes/sombra de st.image */
+.stImage > div {
+    border: none !important;
+    box-shadow: none !important;
 }
-
-

@@ -87,48 +87,77 @@ def summarize_basic_stats(player_df: DataFrame) -> DataFrame:
 
 def build_annual_profile(player_df: DataFrame) -> Tuple[DataFrame, DataFrame]:
     """
-    Construye perfiles anuales pivotados para modelado.
+    Construye perfiles anuales pivotados para modelado, asegurando UNA SOLA FILA como salida.
     """
     player_df = calculate_rating_per_90(player_df)
     player_df['Natural_year'] = player_df['Date'].dt.year
     debut_year = player_df.loc[player_df['Minutes'] > 0, 'Natural_year'].min()
     player_df['year_since_debut'] = player_df['Natural_year'] - debut_year + 1
 
+    # Agregación anual
     career_df = player_df.groupby('year_since_debut').agg({
-        'Minutes':'sum', 'Goals':'sum', 'Assists':'sum',
-        'rating_per_90':'mean', 'Age':'mean'
+        'Minutes': 'sum',
+        'Goals': 'sum',
+        'Assists': 'sum',
+        'rating_per_90': 'mean',
+        'Age': 'mean'
     }).reset_index()
 
-    pivot_rating = career_df.pivot(columns='year_since_debut', values='rating_per_90')
-    pivot_age = career_df.pivot(columns='year_since_debut', values='Age')
-    pivot_minutes = career_df.pivot(columns='year_since_debut', values='Minutes')
+    # Pivoteo
+    # Pivoteo correcto (una sola fila por jugador)
+    # Pivoteo limpio
+    pivot_rating = (
+        career_df
+        .set_index('year_since_debut')['rating_per_90']
+        .rename(lambda x: f'rating_year_{x}')
+        .to_frame().T
+    )
 
-    pivot_rating.columns = [f'rating_year_{i}' for i in pivot_rating.columns]
-    pivot_age.columns = [f'age_year_{i}' for i in pivot_age.columns]
-    pivot_minutes.columns = [f'minutes_year_{i}' for i in pivot_minutes.columns]
+    pivot_age = (
+        career_df
+        .set_index('year_since_debut')['Age']
+        .rename(lambda x: f'age_year_{x}')
+        .to_frame().T
+    )
 
+    pivot_minutes = (
+        career_df
+        .set_index('year_since_debut')['Minutes']
+        .rename(lambda x: f'minutes_year_{x}')
+        .to_frame().T
+    )
+    pivot_rating = pivot_rating.reset_index(drop=True)
+    pivot_age = pivot_age.reset_index(drop=True)
+    pivot_minutes = pivot_minutes.reset_index(drop=True)
+
+    # Concatenar
     player_model_df = pd.concat([pivot_rating, pivot_age, pivot_minutes], axis=1)
+    print(f"✅ Filas finales en player_model_df: {player_model_df.shape[0]}")
+
 
     # Variables derivadas
-    if 'rating_year_2' in player_model_df.columns:
-        player_model_df['growth_2_1'] = player_model_df['rating_year_2'] - player_model_df['rating_year_1']
-    if 'rating_year_3' in player_model_df.columns:
-        player_model_df['growth_3_2'] = player_model_df['rating_year_3'] - player_model_df['rating_year_2']
+    for col1, col2, new in [
+        ('rating_year_2', 'rating_year_1', 'growth_2_1'),
+        ('rating_year_3', 'rating_year_2', 'growth_3_2'),
+        ('rating_year_3', 'rating_year_1', 'rating_trend'),
+        ('minutes_year_3', 'minutes_year_1', 'minutes_trend'),
+    ]:
+        if col1 in player_model_df.columns and col2 in player_model_df.columns:
+            player_model_df[new] = player_model_df[col1] - player_model_df[col2]
 
+    # Promedios agregados
     player_model_df['avg_rating'] = player_model_df.filter(like='rating_year_').mean(axis=1)
     player_model_df['sum_minutes'] = player_model_df.filter(like='minutes_year_').sum(axis=1)
 
-    if 'rating_year_3' in player_model_df.columns and 'rating_year_1' in player_model_df.columns:
-        player_model_df['rating_trend'] = player_model_df['rating_year_3'] - player_model_df['rating_year_1']
-    if 'minutes_year_3' in player_model_df.columns and 'minutes_year_1' in player_model_df.columns:
-        player_model_df['minutes_trend'] = player_model_df['minutes_year_3'] - player_model_df['minutes_year_1']
-
-    for i in [1,2,3]:
+    # Ponderadores por año (capados a 600)
+    for i in [1, 2, 3]:
         col = f'minutes_year_{i}'
         if col in player_model_df.columns:
-            player_model_df[f'minutes_weight_{i}'] = player_model_df[col].clip(0,600)/600
+            player_model_df[f'minutes_weight_{i}'] = player_model_df[col].clip(0, 600) / 600
+
 
     return player_model_df, career_df
+
 
 
 def aggregate_stats_by_year(player_df: DataFrame) -> DataFrame:
