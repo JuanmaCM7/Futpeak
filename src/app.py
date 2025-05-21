@@ -17,7 +17,8 @@ from player_processing import build_player_df, summarize_basic_stats
 from stats import plot_player_stats, plot_rating_projection, plot_minutes_per_year  
 from descriptions import generar_conclusion
 from styles.theme import apply_background
-
+# Configuración general y estilos
+st.set_page_config(page_title="Futpeak", layout="wide", initial_sidebar_state="expanded")
 # Cargar y aplicar CSS personalizado
 def _load_custom_css():
     css_path = Path(__file__).parent / "styles" / "styles.css"
@@ -38,8 +39,7 @@ def _load_custom_css():
 
 _load_custom_css()
 
-# Configuración general y estilos
-st.set_page_config(page_title="Futpeak", layout="wide", initial_sidebar_state="expanded")
+
 apply_background()
 
 # Sidebar: logo, instrucciones y selector de jugador
