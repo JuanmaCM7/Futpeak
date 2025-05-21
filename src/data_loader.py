@@ -20,12 +20,16 @@ CSV_URLS = {
 @st.cache_data
 def download_csv_from_drive(file_id: str, output_path: Path) -> pd.DataFrame:
     if not output_path.exists():
+        # ✅ Crear carpeta si no existe
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+
         url = f"https://drive.google.com/uc?export=download&id={file_id}"
         response = requests.get(url)
         response.raise_for_status()
-        output_path.parent.mkdir(parents=True, exist_ok=True)
+
         with open(output_path, "wb") as f:
             f.write(response.content)
+
     return pd.read_csv(output_path)
 
 # === Funciones de carga ===
