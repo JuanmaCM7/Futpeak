@@ -147,7 +147,8 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-col1, col2, col3 = st.columns([0.7, 1, 1.8], gap="large")
+col1, col2, col3 = st.columns([1, 1, 2], gap="medium")
+
 
 with col1:
     if player_id is not None:
