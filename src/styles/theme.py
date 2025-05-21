@@ -36,30 +36,30 @@ def apply_background():
                 background-position: center;
                 background-attachment: fixed;
                 background-repeat: no-repeat;
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+            }}
+            .stApp::before {{
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.3);
+                z-index: 0;
+                margin: 0 !important;
+                padding: 0 !important;
+            }}
+            .stApp > * {{
+                position: relative;
+                z-index: 1;
             }}
             </style>
         """, unsafe_allow_html=True)
     except Exception as e:
         st.error(f"❌ Failed to apply background: {e}")
-    # Capa overlay oscura semitransparente (más contraste)
-    st.markdown("""
-        <style>
-        .stApp::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3);  /* nivel de oscurecimiento */
-            z-index: 0;
-        }
-        .stApp > * {
-            position: relative;
-            z-index: 1;
-        }
-        </style>
-    """, unsafe_allow_html=True)
+
 
 
 
