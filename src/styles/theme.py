@@ -30,41 +30,24 @@ def apply_background():
 
         st.markdown(f"""
             <style>
-            .stApp {{
+            body {{
                 background-image: url("data:image/png;base64,{encoded}");
                 background-size: cover;
-                background-position: center;
-                background-attachment: local;
+                background-position: center center;
                 background-repeat: no-repeat;
-                padding-top: 0 !important;
-                margin-top: 0 !important;
-            }}
-            .stApp::before {{
-                content: "";
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.3);
-                z-index: 0;
+                background-attachment: local;
                 margin: 0 !important;
                 padding: 0 !important;
             }}
-            .stApp > * {{
-                position: relative;
-                z-index: 1;
+
+            html, .stApp {{
+                margin: 0 !important;
+                padding: 0 !important;
+                height: 100%;
+                overflow-x: hidden;
             }}
             </style>
         """, unsafe_allow_html=True)
+
     except Exception as e:
         st.error(f"❌ Failed to apply background: {e}")
-
-
-
-
-
-
-
-
-

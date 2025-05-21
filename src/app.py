@@ -21,25 +21,6 @@ from styles.theme import apply_background
 # Configuración general y estilos
 st.set_page_config(page_title="Futpeak", layout="wide", initial_sidebar_state="expanded")
 
-# ⚠️ Parche visual para evitar glitch superior
-st.markdown("""
-    <style>
-    html, body {
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow-x: hidden !important;
-        scroll-behavior: auto !important;
-    }
-    html::before {
-        content: "";
-        display: block;
-        height: 1px;
-        margin-top: -1px;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-
 # Cargar y aplicar CSS personalizado
 def _load_custom_css():
     css_path = Path(__file__).parent / "styles" / "styles.css"
