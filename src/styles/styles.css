@@ -91,7 +91,7 @@ img {
 
 /* ---------- SIDEBAR LAYOUT ---------- */
 [data-testid="stSidebar"] > div:first-child {
-    padding: 4.5rem 1.5rem !important;
+    padding: 1.5rem 1.5rem 2rem 1.5rem !important; /* top, right, bottom, left */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
