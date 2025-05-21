@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Inter:wght@400;600&display=swap');
 
+/* Oculta la barra superior de Streamlit Cloud */
+header[data-testid="stHeader"] {
+    display: none !important;
+}
 /* ---------- BASE GENERAL ---------- */
 html, body, .stApp {
     font-family: 'Inter', sans-serif !important;
