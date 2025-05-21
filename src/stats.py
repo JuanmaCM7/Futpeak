@@ -5,6 +5,7 @@ from data_loader import get_matchlogs_by_player, get_metadata_by_player
 from player_processing import build_player_df, aggregate_stats_by_year
 
 def get_player_stats(player_id):
+    
     df = get_matchlogs_by_player(player_id=player_id, future=True).copy()
 
     df['Goals']   = pd.to_numeric(df['Goals'], errors='coerce')
@@ -46,8 +47,9 @@ def plot_player_stats(player_id) -> plt.Figure:
         "axes.facecolor":   "none",
         "figure.facecolor": "none"
     })
-    fig, ax = plt.subplots(figsize=(7, 4), facecolor="none")
-    ax.set_facecolor("none")
+    fig, ax = plt.subplots(figsize=(7, 4), facecolor='none')
+    ax.set_facecolor('none')
+
 
     # remove spines
     for spine in ax.spines.values():
@@ -66,12 +68,14 @@ def plot_player_stats(player_id) -> plt.Figure:
     ax.grid(True, color="white", linestyle="--", alpha=0.2)
 
     # ejes dorados con separación
-    ax.set_xlabel("Año desde debut", fontsize=12, color="#ffd700", labelpad=12)
-    ax.set_ylabel("Goles + Asistencias", fontsize=12, color="#ffd700", labelpad=12)
+    ax.set_xlabel("Año desde debut", fontsize=12, color="#ffffff", labelpad=12, fontname="Inter")
+    ax.set_ylabel("Goles + Asistencias", fontsize=12, color="#ffffff", labelpad=12, fontname="Inter")
 
     # ticks en blanco y separados
     ax.tick_params(axis="x", colors="white", labelsize=10, pad=6)
     ax.tick_params(axis="y", colors="white", labelsize=10, pad=6)
+    for label in ax.get_xticklabels() + ax.get_yticklabels():
+        label.set_fontname("Inter")
 
     # recuadro detrás de las etiquetas
     ax.xaxis.label.set_bbox({
@@ -88,6 +92,7 @@ def plot_player_stats(player_id) -> plt.Figure:
 
 
 def plot_minutes_per_year(player_id) -> plt.Figure:
+    
     """Bar chart de Minutos totales por año desde el debut."""
     df = build_player_df(player_id)
     stats_df = aggregate_stats_by_year(df)
@@ -119,12 +124,14 @@ def plot_minutes_per_year(player_id) -> plt.Figure:
     ax.grid(True, color="white", linestyle="--", alpha=0.2)
 
     # ejes dorados con separación
-    ax.set_xlabel("Año desde debut", fontsize=12, color="#ffd700", labelpad=12)
-    ax.set_ylabel("Minutos jugados", fontsize=12, color="#ffd700", labelpad=12)
+    ax.set_xlabel("Año desde debut", fontsize=12, color="#ffffff", labelpad=12, fontname="Inter")
+    ax.set_ylabel("Minutos jugados", fontsize=12, color="#ffffff", labelpad=12, fontname="Inter")
 
     # ticks en blanco y separados
     ax.tick_params(axis="x", colors="white", labelsize=10, pad=6)
     ax.tick_params(axis="y", colors="white", labelsize=10, pad=6)
+    for label in ax.get_xticklabels() + ax.get_yticklabels():
+        label.set_fontname("Inter")
 
     # recuadro detrás de las etiquetas
     ax.xaxis.label.set_bbox({
@@ -146,6 +153,7 @@ def plot_rating_projection(
     group_curve: pd.DataFrame,
     pred_label: str
 ) -> plt.Figure:
+    
     """
     Evolución y proyección del rating por 90:
     Líneas definidas, fondo transparente, grid blanco suave,
@@ -201,11 +209,13 @@ def plot_rating_projection(
     ax.grid(True, color="white", linestyle="--", alpha=0.4)
 
     # ejes dorados con separación
-    ax.set_xlabel("Años desde el debut", fontsize=12, color="#ffd700", labelpad=12)
-    ax.set_ylabel("Rating por 90 minutos", fontsize=12, color="#ffd700", labelpad=12)
+    ax.set_xlabel("Años desde el debut", fontsize=12, color="#ffffff", labelpad=12, fontname="Inter")
+    ax.set_ylabel("Rating por 90 minutos", fontsize=12, color="#ffffff", labelpad=12, fontname="Inter")
 
     ax.tick_params(axis="x", colors="white", labelsize=10, pad=6)
     ax.tick_params(axis="y", colors="white", labelsize=10, pad=6)
+    for label in ax.get_xticklabels() + ax.get_yticklabels():
+        label.set_fontname("Inter")
 
     # recuadros en etiquetas
     ax.xaxis.label.set_bbox({

@@ -8,7 +8,7 @@ from PIL import Image, ImageEnhance
 def apply_background():
     assets_path = Path(__file__).parent.parent / "assets"
     original = assets_path / "bg_image.png"
-    filtered = assets_path / "bg_image_filtered.png"
+    filtered = assets_path / "bg_image_filtered_2.png"
 
     if original.exists() and not filtered.exists():
         try:
