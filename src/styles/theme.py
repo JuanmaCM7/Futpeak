@@ -34,7 +34,7 @@ def apply_background():
                 background-image: url("data:image/png;base64,{encoded}");
                 background-size: cover;
                 background-position: center;
-                background-attachment: fixed;
+                background-attachment: local;
                 background-repeat: no-repeat;
                 padding-top: 0 !important;
                 margin-top: 0 !important;
