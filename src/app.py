@@ -157,7 +157,7 @@ with st.sidebar:
 
 st.markdown(
     """
-    # 🏟️ ¡Bienvenido a Futpeak!
+    <h1 style="font-size:2rem; margin-bottom:0.5rem;">🏟️ ¡Bienvenido a Futpeak!</h1>
     <p style='font-size:1.3rem; line-height:1.5;'>
       Futpeak es una herramienta de scouting que te ayuda a evaluar y proyectar el potencial  
       de jóvenes futbolistas basándose en datos de jugadores con trayectorias profesionales similares.
