@@ -69,20 +69,22 @@ streamlit run src/app.py
 ---
 
 ## 📁 Estructura del proyecto
-
+```
 Futpeak/
 ├── model/
-│   └── curvas_promedio.joblib
+│ └── curvas_promedio.joblib
 ├── notebooks/
 ├── src/
-│   ├── assets/
-│   │   └── player_faces/
-│   ├── app.py
-│   ├── model_runner.py
-│   ├── stats.py
-│   └── ...
+│ ├── app.py
+│ ├── model_runner.py
+│ ├── stats.py
+│ ├── assets/
+│ │ └── player_faces/
 ├── requirements.txt
 ├── README.md
+├── Banner.png
+└── App.png
+```
 ---
 
 ## 🧠 Modelo de predicción
@@ -115,7 +117,7 @@ Futpeak/
 
 ## 🤝 Contribuciones
 
-¿Ideas o mejoras? ¡Abre un issue o déjame un correo en juacanom@gmail.com
+¿Ideas o mejoras? Abre un issue o déjame un correo en juacanom@gmail.com
 Toda ayuda es bienvenida para mejorar la herramienta.
 
 ---
