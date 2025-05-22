@@ -34,31 +34,24 @@ def apply_background():
                 background-image: url("data:image/png;base64,{encoded}");
                 background-size: cover;
                 background-position: center;
-                background-attachment: local;
                 background-repeat: no-repeat;
-                padding-top: 0 !important;
-                margin-top: 0 !important;
+                background-attachment: scroll;
             }}
             .stApp::before {{
                 content: "";
-                position: fixed;
+                position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0, 0, 0, 0.3);
-                z-index: 0;
-                margin: 0 !important;
-                padding: 0 !important;
-            }}
-            .stApp > * {{
-                position: relative;
-                z-index: 1;
+                background: rgba(0, 0, 0, 0.35);
+                z-index: -1;
             }}
             </style>
         """, unsafe_allow_html=True)
     except Exception as e:
         st.error(f"❌ Failed to apply background: {e}")
+
 
 
 

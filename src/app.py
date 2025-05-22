@@ -106,7 +106,7 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([0.6, 0.8, 1], gap="large")
+col1, col2, col3 = st.columns([0.5, 0.6, 1], gap="large")
 
 
 with col1:
