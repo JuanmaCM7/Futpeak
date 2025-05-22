@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="Banner.png" alt="Futpeak Banner">
+  <img src="src/assets/Banner.png" alt="Futpeak Banner">
 </p>
 
 <h1 align="center">⚽ Futpeak</h1>
@@ -35,7 +35,7 @@
 
 ## 🎥 Demo visual
 
-<img src="App.png" alt="Demo de la app" width="100%">
+<img src="src/assets/App.png" alt="Demo de la app" width="100%">
 
 ---
 
@@ -73,7 +73,6 @@ streamlit run src/app.py
 Futpeak/
 ├── model/
 │   └── curvas_promedio.joblib
-│   └── ...
 ├── notebooks/
 ├── src/
 │   ├── assets/
@@ -82,9 +81,8 @@ Futpeak/
 │   ├── model_runner.py
 │   ├── stats.py
 │   └── ...
-├── README.md
 ├── requirements.txt
-
+├── README.md
 ---
 
 ## 🧠 Modelo de predicción
