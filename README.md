@@ -1,13 +1,19 @@
 <p align="center">
-  <img src="src/assets/Banner.png" alt="Futpeak Banner">
+  <a href="https://futpeak.streamlit.app/">
+    <img src="src/assets/Banner.png" alt="Futpeak Banner">
+  </a>
 </p>
 
-<h1 align="center">⚽ Futpeak</h1>
+<h1 align="center">
+  <a href="https://futpeak.streamlit.app/" style="text-decoration: none; color: inherit;">⚽ Futpeak</a>
+</h1>
 
 <p align="center">
   <strong>Predict Potential. Reach the Peak.</strong><br>
-  Herramienta de scouting que proyecta el rendimiento futuro de jóvenes futbolistas.<br>
+  Herramienta de scouting que proyecta el rendimiento futuro de jóvenes futbolistas.
+  (Haz click en el nombre de la app, el banner o la demo visual para acceder a la página)
 </p>
+
 
 ---
 
@@ -35,7 +41,11 @@
 
 ## 🎥 Demo visual
 
-<img src="src/assets/App.png" alt="Demo de la app" width="100%">
+<p align="center">
+  <a href="https://futpeak.streamlit.app/">
+    <img src="src/assets/App.png" alt="Demo de la app" width="100%">
+  </a>
+</p>
 
 ---
 
