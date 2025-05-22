@@ -97,7 +97,7 @@ with st.sidebar:
 
 # Contenido principal
 st.markdown("""
-    <div style="margin-top: -2rem; margin-bottom: 1rem;">
+    <div style="margin-top: -0.2rem; margin-bottom: 1rem;">
         <h1 style="font-size:2rem; margin-bottom:0.2rem;">🏟️ ¡Bienvenido a Futpeak!</h1>
         <p style='font-size:1.2rem; line-height:1.4; margin: 0;'>
           Futpeak es una herramienta de scouting para proyectar el rendimiento de jóvenes futbolistas
@@ -106,7 +106,7 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([0.5, 0.6, 1], gap="large")
+col1, col2, col3 = st.columns([0.6, 0.8, 1.2], gap="large")
 
 
 with col1:

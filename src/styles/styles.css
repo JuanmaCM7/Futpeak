@@ -1,71 +1,54 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Inter:wght@400;600&display=swap');
 
-/* Oculta la barra superior de Streamlit */
+/* Oculta la barra superior de Streamlit Cloud */
 header[data-testid="stHeader"] {
     display: none !important;
 }
 
-/* Elimina márgenes y activa scroll si se requiere */
+/* === BASE GENERAL === */
+html {
+    font-size: 90% !important; /* Simula un zoom-out visual */
+}
+
 html, body, .stApp {
+    font-family: 'Inter', sans-serif !important;
+    color: #ffffff;
+    background-color: transparent;
     margin: 0 !important;
     padding: 0 !important;
-    font-family: 'Inter', sans-serif !important;
-    background-color: transparent;
-    color: #ffffff;
+    overflow-y: auto !important;
     overflow-x: hidden !important;
 }
 
-/* Contenedor principal con margen inferior para evitar cortes */
 .block-container {
-    padding: 1rem 2rem 4rem 2rem !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 2rem !important;
+    max-width: 100vw !important;
+    margin: 0 auto !important;
 }
 
-/* Títulos */
-h1, h2, h3, h4 {
+section.main > div {
+    max-width: 100vw !important;
+    padding-top: 0 !important;
+}
+
+/* TEXTOS Y TÍTULOS */
+h1, h2, h3, h4,
+.block-card h3,
+[data-testid="stSidebar"] h2 {
     font-family: 'Montserrat', sans-serif !important;
-    color: #FFD700 !important;
     font-weight: 700 !important;
+    color: #FFD700 !important;
     text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
 }
 
-/* Textos normales */
-p, span, li, ul, td, th {
+p, span, li, ul, ol, td, th {
     font-family: 'Inter', sans-serif !important;
+    font-weight: 400 !important;
     color: #ffffff;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
-/* Sidebar estilo limpio */
-[data-testid="stSidebar"] {
-    background-color: rgba(10, 30, 63, 0.7) !important;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    padding: 1rem 1.5rem 2rem 1.5rem !important;
-}
-
-/* Oculta navegación por defecto */
-[data-testid="stSidebarNav"] {
-    display: none !important;
-}
-
-/* Imágenes redondeadas */
-img {
-    border-radius: 50%;
-    border: 3px solid #999;
-}
-
-/* Selectbox por encima de todo */
-div[data-baseweb="select"] {
-    background-color: white !important;
-    border-radius: 6px !important;
-    z-index: 9999 !important;
-    position: relative !important;
-}
-div[data-baseweb="select"] * {
-    color: black !important;
-}
-
-/* TARJETAS — Fondo translúcido oscuro con padding y borde redondeado */
+/* TARJETAS */
 .block-card {
     background-color: rgba(10, 10, 10, 0.75);
     padding: 1.5rem;
@@ -75,4 +58,78 @@ div[data-baseweb="select"] * {
 }
 .block-card p, .block-card span {
     color: #ffffff !important;
+}
+
+/* SIDEBAR */
+[data-testid="stSidebar"] {
+    background-color: rgba(10, 30, 63, 0.7) !important;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 10;
+}
+
+[data-testid="stSidebar"] > div:first-child {
+    padding: 1rem 1.5rem 2rem 1.5rem !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    z-index: 10;
+}
+
+.sidebar-logo-container {
+    margin-top: -0.5rem;
+    margin-bottom: 0.2rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.sidebar-logo-container img {
+    width: 180px;
+    height: auto;
+}
+
+[data-testid="stSidebarNav"] {
+    display: none !important;
+}
+
+/* SELECTBOX */
+div[data-baseweb="select"] {
+    background-color: white !important;
+    border-radius: 6px !important;
+    z-index: 9999 !important;
+    position: relative !important;
+}
+
+div[data-baseweb="select"] * {
+    color: black !important;
+    z-index: 9999 !important;
+    position: relative !important;
+}
+
+div[data-baseweb="menu"] div[role="option"] {
+    color: black !important;
+    background-color: white !important;
+}
+
+div[data-baseweb="menu"] div[role="option"][aria-selected="true"] span {
+    color: black !important;
+    font-weight: 700 !important;
+}
+
+/* IMÁGENES */
+.stImage > div {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+img {
+    border-radius: 50%;
+    border: 3px solid #948e8e;
+}
+
+/* SOMBRA EN TEXTOS */
+html, body, .stApp, p, span, div, li, td, th, h1, h2, h3, h4, h5, h6 {
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
