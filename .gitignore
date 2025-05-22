@@ -8,3 +8,4 @@ data/meta/
 git-filter-repo/
 flecha-curva.png
 futpeak-clean/
+__pycache__

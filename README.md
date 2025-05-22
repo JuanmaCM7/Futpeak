@@ -16,6 +16,35 @@
 
 ---
 
+## 🎙️ Presentación del proyecto
+
+> En el mundo del fútbol, se invierte antes de conocer el rendimiento real de un fichaje.  
+> ¿Y si se pudiera anticipar qué jugador joven llegará lejos… y cuándo?
+
+En 2023, los clubes europeos gastaron más de **8.800 millones de euros** en fichajes internacionales.  
+El **65 %** de ese gasto se destinó a jugadores **menores de 24 años**: apuestas sin garantías de rendimiento inmediato.  
+Y lo más preocupante: según *The Times*, entre el **30 % y el 50 %** de los fichajes **no cumplen las expectativas deportivas**.
+
+🎯 **Futpeak nace para reducir ese riesgo.**
+
+Es una herramienta de predicción que analiza datos reales —**minutos, edad, impacto ofensivo**— y proyecta la evolución de un jugador comparándola con trayectorias profesionales reales. Agrupa automáticamente a cada jugador por patrones de desarrollo y anticipa su **año de mayor rendimiento**.
+
+Ya hemos desarrollado un **MVP funcional** que permite seleccionar un jugador y visualizar su perfil, su curva de rendimiento y una proyección ajustada.  
+En pruebas internas, el modelo ha mostrado una **precisión en torno al 75 %** al predecir si un jugador triunfará y cuándo.  
+Jugadores como **Lamine Yamal, Désiré Doué o Jamal Musiala** ya han pasado por nuestro sistema.
+
+💼 **¿Nuestro modelo de negocio?**  
+Licencias **SaaS** para clubes, agencias y analistas, con planes por volumen y uso, así como un plan *freemium* con una pequeña base de datos de prueba.
+
+🧠 **Y esto es solo el comienzo.**
+
+La misma lógica de Futpeak puede aplicarse en otros sectores: startups, talento digital o inversión en personas.  
+Donde hay datos y riesgo, hay oportunidad de anticipar.  
+**Futpeak convierte datos en decisiones, antes de que el talento hable.**
+
+---
+
+
 ## 🧭 Tabla de Contenidos
 
 - [🔍 Descripción](#-descripción)
