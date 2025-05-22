@@ -21,8 +21,8 @@
 > En el mundo del fútbol, se invierte antes de conocer el rendimiento real de un fichaje.  
 > ¿Y si se pudiera anticipar qué jugador joven llegará lejos… y cuándo?
 
-En 2023, los clubes europeos gastaron más de **8.800 millones de euros** en fichajes internacionales.  
-El **65 %** de ese gasto se destinó a jugadores **menores de 24 años**: apuestas sin garantías de rendimiento inmediato.  
+En 2023, los clubes gastaron más de **8.500 millones de euros** en fichajes internacionales.  
+Gran parte de ese gasto se destinó a jugadores **menores de 24 años**: apuestas sin garantías de rendimiento inmediato.  
 Y lo más preocupante: según *The Times*, entre el **30 % y el 50 %** de los fichajes **no cumplen las expectativas deportivas**.
 
 🎯 **Futpeak nace para reducir ese riesgo.**

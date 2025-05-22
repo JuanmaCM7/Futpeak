@@ -20,7 +20,7 @@ from styles.theme import apply_background
 
 
 # Configuración general y estilos
-st.set_page_config(page_title="Futpeak", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Futpeak", page_icon="⚽", layout="wide", initial_sidebar_state="expanded")
 
 # Cargar y aplicar CSS personalizado
 def _load_custom_css():
