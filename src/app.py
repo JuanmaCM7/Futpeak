@@ -18,6 +18,7 @@ from stats import plot_player_stats, plot_rating_projection, plot_minutes_per_ye
 from descriptions import generar_conclusion
 from styles.theme import apply_background
 
+
 # Configuración general y estilos
 st.set_page_config(page_title="Futpeak", layout="wide", initial_sidebar_state="expanded")
 
@@ -42,6 +43,7 @@ def _load_custom_css():
 _load_custom_css()
 apply_background()
 
+
 # Sidebar: logo, instrucciones y selector de jugador
 with st.sidebar:
     logo_path = Path(__file__).parent / "assets" / "logo_no_bg_preview_3.png"
@@ -54,6 +56,7 @@ with st.sidebar:
         )
 
     st.markdown("<div style='height:20px;'></div>", unsafe_allow_html=True)
+    
 
     st.markdown(
         """
@@ -79,7 +82,7 @@ with st.sidebar:
     player_names = sorted(metadata["Player_name"].dropna().unique())
 
     st.markdown(
-        "<p style='margin:0 0 0.25rem 0; white-space: nowrap; color:#ffffff; font-size:1rem;'>"
+        "<p style='margin:0 0 0.4rem 0; white-space: nowrap; color:#ffffff; font-size:1rem;'>"
         "👤 Selecciona un jugador:</p>",
         unsafe_allow_html=True
     )
@@ -106,7 +109,7 @@ with st.sidebar:
         <p style="
         font-size: 0.85rem;
         color: #CCCCCC;
-        margin-top: 0.5rem;
+        margin-top: 0.2rem;
         line-height: 1.2;
         ">
         ⚙️ <em>Herramienta en desarrollo:</em> próximamente añadiremos variables como 
@@ -123,6 +126,7 @@ with st.sidebar:
                 color:black;
                 font-weight:bold;
                 padding:0.5em 1em;
+                margin-top: 0.5rem;
                 border:none;
                 border-radius:8px;
                 font-size:1rem;
@@ -147,7 +151,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-col1, col2, col3 = st.columns([1, 1, 2], gap="medium")
+col1, col2, col3 = st.columns([0.7, 1, 1.8], gap="medium")
 
 
 with col1:

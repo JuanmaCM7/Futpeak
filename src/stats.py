@@ -154,35 +154,29 @@ def plot_rating_projection(
     pred_label: str
 ) -> plt.Figure:
     
-    """
-    Evolución y proyección del rating por 90:
-    Líneas definidas, fondo transparente, grid blanco suave,
-    ejes y leyenda con estilo.
-    """
-    # tema transparente
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+
     sns.set_theme(style="whitegrid", rc={
         "axes.facecolor":   "none",
         "figure.facecolor": "none"
     })
 
-    # preparar datos
     df = player_seasonal.copy()
     df["year_since_debut"] = pd.to_numeric(df["year_since_debut"], errors="coerce")
-    df["rating_per_90"]   = pd.to_numeric(df["rating_per_90"], errors="coerce")
+    df["rating_per_90"] = pd.to_numeric(df["rating_per_90"], errors="coerce")
     player_filtered = df[df["year_since_debut"] <= 13]
 
     gc = group_curve.copy()
     gc["year_since_debut"] = pd.to_numeric(gc["year_since_debut"], errors="coerce")
 
-    # figura transparente
     fig, ax = plt.subplots(figsize=(10, 6), facecolor="none")
     ax.set_facecolor("none")
 
-    # quitar spines
     for spine in ax.spines.values():
         spine.set_visible(False)
 
-    # trazar curvas
+    # 🔵 Línea del jugador
     ax.plot(
         player_filtered["year_since_debut"],
         player_filtered["rating_per_90"],
@@ -190,6 +184,8 @@ def plot_rating_projection(
         color="#1a85eb", linewidth=3,
         label=player_name
     )
+
+    # 🔴 Línea del grupo promedio
     if "rating_avg" in gc:
         ax.plot(
             gc["year_since_debut"],
@@ -197,6 +193,19 @@ def plot_rating_projection(
             linestyle="--", color="#C62D30", linewidth=3,
             label=f"Grupo promedio: {pred_label}"
         )
+
+    # ✅ Banda de percentiles 25–75
+    if "rating_p25" in gc.columns and "rating_p75" in gc.columns:
+        ax.fill_between(
+            gc["year_since_debut"],
+            gc["rating_p25"],
+            gc["rating_p75"],
+            color="#C62D30",
+            alpha=0.15,
+            label="Percentil 25–75"
+        )
+
+    # 🟢 Proyección ajustada (si existe)
     if "projection" in gc:
         ax.plot(
             gc["year_since_debut"],
@@ -205,19 +214,15 @@ def plot_rating_projection(
             label="Proyección ajustada"
         )
 
-    # grid suave
     ax.grid(True, color="white", linestyle="--", alpha=0.4)
 
-    # ejes dorados con separación
     ax.set_xlabel("Años desde el debut", fontsize=12, color="#ffffff", labelpad=12, fontname="Inter")
     ax.set_ylabel("Rating por 90 minutos", fontsize=12, color="#ffffff", labelpad=12, fontname="Inter")
-
     ax.tick_params(axis="x", colors="white", labelsize=10, pad=6)
     ax.tick_params(axis="y", colors="white", labelsize=10, pad=6)
     for label in ax.get_xticklabels() + ax.get_yticklabels():
         label.set_fontname("Inter")
 
-    # recuadros en etiquetas
     ax.xaxis.label.set_bbox({
         "facecolor": "black", "alpha": 0.3,
         "edgecolor": "white", "boxstyle": "round,pad=0.3"
@@ -227,7 +232,6 @@ def plot_rating_projection(
         "edgecolor": "white", "boxstyle": "round,pad=0.3"
     })
 
-    # leyenda con fondo sutil
     leg = ax.legend(loc="lower center", fontsize=10, frameon=True)
     for txt in leg.get_texts():
         txt.set_color("white")
@@ -239,3 +243,4 @@ def plot_rating_projection(
 
     fig.tight_layout()
     return fig
+
