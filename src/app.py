@@ -158,6 +158,35 @@ img {
 html, body, .stApp, p, span, div, li, td, th, h1, h2, h3, h4, h5, h6 {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
+            
+/* Re-define selectbox container y menú desplegable */
+div[data-baseweb="select"] {
+    background-color: white !important;
+    color: black !important;
+    border-radius: 6px !important;
+    border: 1px solid #ccc !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 0.95rem !important;
+    z-index: 99999 !important;
+}
+
+div[data-baseweb="select"] input {
+    color: black !important;
+    background-color: white !important;
+    z-index: 99999 !important;
+}
+
+div[data-baseweb="popover"] {
+    z-index: 100000 !important;
+    background-color: white !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+}
+
+div[data-baseweb="popover"] * {
+    color: black !important;
+    font-family: 'Inter', sans-serif !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
