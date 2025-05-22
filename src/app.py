@@ -61,20 +61,15 @@ with st.sidebar:
         2. Visualiza al instante su resumen de carrera y proyección.  
         3. Compara con grupos de jugadores similares.  
     """)
-
+    st.markdown(" ")
     metadata = load_future_metadata()
     player_names = sorted(metadata["Player_name"].dropna().unique())
 
-    st.markdown(
-        "<p style='margin:0 0 0.4rem 0; white-space: nowrap; color:#ffffff; font-size:1rem;'>👤 Selecciona un jugador:</p>",
-        unsafe_allow_html=True
-    )
-
+    st.markdown("**👤 Selecciona un jugador:**", unsafe_allow_html=True)
     selected_player = st.selectbox(
-        label="👤 Selecciona un jugador:",
+        label="",
         options=player_names,
-        index=0,
-        label_visibility="collapsed"
+        index=0
     )
 
     id_series = metadata.loc[metadata["Player_name"] == selected_player, "Player_ID"]
