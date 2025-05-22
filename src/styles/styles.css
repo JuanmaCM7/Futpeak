@@ -121,3 +121,23 @@ img {
 html, body, .stApp, p, span, div, li, td, th, h1, h2, h3, h4, h5, h6 {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
+
+/* === 🔧 Estructura base de altura adaptable y scroll === */
+html, body, .stApp {
+    height: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    position: relative !important;
+}
+
+/* === 🔧 Permite scroll si hay contenido extenso === */
+.block-container {
+    padding-bottom: 6rem !important;
+    overflow: visible !important;
+}
+
+/* 🔒 Protege el selectbox contra overlays invisibles */
+div[data-baseweb="select"] {
+    z-index: 9999 !important;
+    position: relative !important;
+}
