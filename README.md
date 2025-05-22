@@ -1,226 +1,132 @@
-# FUTPEAK - Proyecto de Scraping y Predicción de Carreras de Futbolistas
+<p align="center">
+  <img src="Banner.png" alt="Futpeak Banner">
+</p>
 
-## Descripción
-Scraping de datos de jugadores, partidos y competiciones de fútbol profesional para el análisis de trayectorias deportivas.
+<h1 align="center">⚽ Futpeak</h1>
 
-## Estructura del Proyecto
-- data/meta/
-  - male_players.yaml
-  - male_players_metadata.csv
-  - male_competitions.csv
-- notebooks/
-  - tests.ipynb (desarrollo de scraping)
-- scripts/ (pendiente de organizar)
+<p align="center">
+  <strong>Predict Potential. Reach the Peak.</strong><br>
+  Herramienta de scouting que proyecta el rendimiento futuro de jóvenes futbolistas.<br>
+</p>
 
-## Cómo empezar
-1. Clonar el repositorio.
-2. Crear el entorno conda:
+---
 
-conda env create -f environment.yml
+## 🧭 Tabla de Contenidos
 
-3. Activar el entorno:
+- [🔍 Descripción](#-descripción)
+- [🎥 Demo visual](#-demo-visual)
+- [✨ Funcionalidades](#-funcionalidades)
+- [🛠️ Instalación](#-instalación)
+- [📁 Estructura del proyecto](#-estructura-del-proyecto)
+- [🧠 Modelo de predicción](#-modelo-de-predicción)
+- [🚧 Roadmap](#-roadmap)
+- [🤝 Contribuciones](#-contribuciones)
+- [📄 Licencia](#-licencia)
 
-conda activate futpeak
+---
 
-4. Ejecutar los notebooks o scripts.
+## 🔍 Descripción
 
-## Dependencias
-- Python 3.10
-- Selenium
-- BeautifulSoup4
-- pandas
-- PyYAML
-- tqdm (opcional)
+**Futpeak** es una aplicación interactiva que ayuda a evaluar y proyectar el potencial de jóvenes futbolistas basándose en datos de carrera y trayectorias similares. Utiliza técnicas de machine learning y curvas de evolución promedio para predecir el desarrollo futuro de un jugador.
 
-## Estado
-🚧 Proyecto en desarrollo. Actualmente completando scraping de metadata de jugadores.
+> 💡 Pensado para clubes, analistas y agencias que buscan tomar decisiones de scouting basadas en evidencia.
 
+---
 
-# Obtención de metadata:
+## 🎥 Demo visual
+
+<img src="App.png" alt="Demo de la app" width="100%">
+
+---
+
+## ✨ Funcionalidades
+
+- 📈 Proyección del rendimiento ajustada por trayectoria
+- 🧬 Comparación con grupos de jugadores similares
+- 🔍 Visualización de producción ofensiva, minutos y rating por 90 minutos
+- 🧑‍💻 App desplegada en Streamlit con diseño responsivo
+- 🛡️ Curvas con percentiles y bandas de confianza (25–75)
+
+---
+
+## 🛠️ Instalación
+
+```bash
+# Clona el repositorio
+git clone https://github.com/JuanmaCM7/Futpeak.git
+cd Futpeak
+
+# Crea un entorno virtual
+python -m venv venv
+source venv/bin/activate  # o .\venv\Scripts\activate en Windows
+
+# Instala las dependencias
+pip install -r requirements.txt
+
+# Ejecuta la app
+streamlit run src/app.py
 ```
-# Metadata players
+---
 
-# 📦 Imports
-import yaml
-import time
-import re
-import pandas as pd
-from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import WebDriverException
-from pathlib import Path
-import random
+## 📁 Estructura del proyecto
 
-# === Paths ===
-YAML_PATH = "data/meta/male_players.yaml"
-OUTPUT_FILE = Path("data/meta/male_players_metadata.csv")
-CHROME_PATH = "C:/Windows/System32/chromedriver.exe"
+Futpeak/
+├── model/
+│   └── curvas_promedio.joblib
+│   └── ...
+├── notebooks/
+├── src/
+│   ├── assets/
+│   │   └── player_faces/
+│   ├── app.py
+│   ├── model_runner.py
+│   ├── stats.py
+│   └── ...
+├── README.md
+├── requirements.txt
 
-# === Load YAML
-with open(YAML_PATH, "r", encoding="utf-8") as f:
-    players = yaml.safe_load(f)
+---
 
-# === Set the last scraped URL (for continuation)
-# Leave it empty "" to scrape from the beginning
-last_scraped_url = ""
+## 🧠 Modelo de predicción
 
-# === Find starting point
-start_index = 0  # By default start from 0
+🎯 Clasificador multiclase RandomForest entrenado con trayectorias de cientos de jugadores
 
-if last_scraped_url:
-    for idx, player in enumerate(players):
-        if player["url_template"] == last_scraped_url:
-            start_index = idx + 1  # Start AFTER the last scraped player
-            break
-    else:
-        raise ValueError("❌ last_scraped_url not found in male_players.yaml!")
+📊 Ajuste de proyección basado en rating real vs. curva promedio
 
-players = players[start_index:]  # Only keep players after last scraped
+🔄 Análisis temporal desde el debut profesional
 
-print(f"🚀 Starting scraping from index {start_index} ({players[0]['name']})")
+📉 Incorporación futura de variables como lesiones, traspasos y minutos acumulados
 
-# === Setup Selenium
-options = Options()
-# options.add_argument("--headless")  # Optional: hide browser if you want
-options.add_argument("--disable-gpu")
-options.add_argument("--start-maximized")
-service = Service(executable_path=CHROME_PATH)
-driver = webdriver.Chrome(service=service, options=options)
+---
 
-# === Metadata extraction
-def extract_metadata(driver):
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-    meta = soup.find("div", id="meta")
-    if not meta:
-        return {}
+## 🚧 Roadmap
 
-    try:
-        full_name = meta.find("p").text.strip()
-    except:
-        full_name = None
+ ✅ Visualización de rendimiento por temporada
 
-    position = footed = None
-    try:
-        pos_block = meta.find("strong", string="Position:").parent
-        if pos_block:
-            text = pos_block.get_text(separator="|")
-            parts = text.split("|")
-            position = parts[1].strip() if len(parts) > 1 else None
-            footed = parts[3].strip() if "Footed:" in text and len(parts) > 3 else None
-    except:
-        pass
+ ✅ Proyección automática con ajuste personalizado
 
-    birth_date = age = birth_place = None
-    try:
-        birth_tag = meta.find("strong", string="Born:")
-        if birth_tag:
-            birth_block = birth_tag.parent
-            date_span = birth_block.find("span")
-            if date_span:
-                birth_date = date_span.get("data-birth")
-                if not birth_date:
-                    raw_text = date_span.text.strip()
-                    try:
-                        birth_date = pd.to_datetime(raw_text).strftime("%Y-%m-%d")
-                    except:
-                        birth_date = None
+ 📅 Incorporación de traspasos y lesiones
 
-            nobr = birth_block.find("nobr")
-            if nobr:
-                raw_age = nobr.text
-                match = re.search(r"Age:\s*([\d\-]+)", raw_age)
-                age = match.group(1) if match else None
+ 📅 Nuevos modelos por posición específica
 
-            birth_place_span = nobr.find_next("span") if nobr else None
-            if birth_place_span:
-                birth_place = birth_place_span.text.strip()
-    except:
-        pass
+ 📅 Exportación de informes PDF
 
-    nationality = None
-    try:
-        nat_tag = meta.find("strong", string="National Team:")
-        if nat_tag:
-            nationality = nat_tag.find_next("a").text.strip()
-    except:
-        pass
+ 📅Dashboard para clubes y agentes
 
-    if not nationality:
-        try:
-            citizen_tag = meta.find("strong", string="Citizenship:")
-            if citizen_tag:
-                nationality = citizen_tag.find_next("a").text.strip()
-        except:
-            pass
+---
 
-    club = None
-    try:
-        club_tag = meta.find("strong", string="Club:")
-        if club_tag:
-            club = club_tag.find_next("a").text.strip()
-    except:
-        pass
+## 🤝 Contribuciones
 
-    return {
-        "full_name": full_name,
-        "position": position,
-        "footed": footed,
-        "birth_date": birth_date,
-        "age": age,
-        "birth_place": birth_place,
-        "nationality": nationality,
-        "club": club
-    }
+¿Ideas o mejoras? ¡Abre un issue o déjame un correo en juacanom@gmail.com
+Toda ayuda es bienvenida para mejorar la herramienta.
 
-# === Create output file if not exists
-if not OUTPUT_FILE.exists():
-    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
-    pd.DataFrame(columns=[
-        "player_name", "url_template", "full_name", "position", "footed",
-        "birth_date", "age", "birth_place", "nationality", "club"
-    ]).to_csv(OUTPUT_FILE, index=False)
+---
 
-# === Main loop
-for i, player in enumerate(players, start=start_index + 1):
-    player_name = player["name"]
-    player_url = player["url_template"]
+## 📄 Licencia
 
-    print(f"\n🔍 [{i}] Scraping: {player_url}")
+Este proyecto no está licenciado como software libre.
 
-    retries = 0
-    max_retries = 3
-    success = False
+Todos los derechos reservados © 2025 JuanmaCM7.  
+No está permitido copiar, modificar ni redistribuir el código sin consentimiento previo por escrito del autor.
 
-    while retries < max_retries and not success:
-        try:
-            driver.get(player_url)
-            sleep_time = random.uniform(8, 12)
-            print(f"⏳ Waiting {sleep_time:.2f} seconds after loading...")
-            time.sleep(sleep_time)
-
-            data = extract_metadata(driver)
-            if not data:
-                print(f"⚠️ No metadata found for {player_name}")
-                break
-
-            data["player_name"] = player_name
-            data["url_template"] = player_url
-
-            pd.DataFrame([data]).to_csv(OUTPUT_FILE, mode="a", header=False, index=False)
-            print(f"✅ Saved metadata for {player_name}")
-            success = True
-
-        except WebDriverException as e:
-            if "ERR_INTERNET_DISCONNECTED" in str(e):
-                retries += 1
-                print(f"⚠️ Internet disconnected. Retrying ({retries}/{max_retries})...")
-                time.sleep(10)
-            else:
-                print(f"❌ WebDriver error: {e}")
-                break
-
-driver.quit()
-print(f"\n💾 Done! Full metadata saved to: {OUTPUT_FILE}")
-```
+---
