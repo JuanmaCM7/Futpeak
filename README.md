@@ -10,10 +10,9 @@
 
 <p align="center">
   <strong>Predict Potential. Reach the Peak.</strong><br>
-  Herramienta de scouting que proyecta el rendimiento futuro de jóvenes futbolistas.
-  (Haz click en el nombre de la app, el banner o la demo visual para acceder a la página)
+  Herramienta de scouting que proyecta el rendimiento futuro de jóvenes futbolistas.<br>
+  <em>(Haz click en el nombre de la app, el banner o la demo visual para acceder a la página)</em>
 </p>
-
 
 ---
 
