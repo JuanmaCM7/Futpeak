@@ -114,26 +114,36 @@ p, span, li, ul, ol, td, th {
 
 div[data-baseweb="select"] {
     background-color: white !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
     border-radius: 6px !important;
-    z-index: 9999 !important;
-    position: relative !important;
+    box-shadow: none !important;
+}
+
+div[data-baseweb="select"] input {
+    background-color: white !important;
+    color: black !important;
 }
 
 div[data-baseweb="select"] * {
     color: black !important;
-    z-index: 9999 !important;
-    position: relative !important;
+}
+
+div[data-baseweb="select"]:hover,
+div[data-baseweb="select"]:focus {
+    background-color: white !important;
+    color: black !important;
+    border-color: #ccc !important;
 }
 
 div[data-baseweb="menu"] div[role="option"] {
-    color: black !important;
     background-color: white !important;
-}
-
-div[data-baseweb="menu"] div[role="option"][aria-selected="true"] span {
     color: black !important;
+}
+div[data-baseweb="menu"] div[role="option"][aria-selected="true"] span {
     font-weight: 700 !important;
 }
+
 
 .stImage > div {
     border: none !important;
