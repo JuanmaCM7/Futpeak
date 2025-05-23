@@ -1,9 +1,9 @@
-from gemini_utils import generar_conclusion_gemini
 from model_runner import predict_and_project_player
 from data_loader import load_future_metadata
 from player_processing import build_player_df
 from datetime import datetime
 import pandas as pd
+import requests
 
 def generar_conclusion_completa(player_id: str) -> str:
     fecha_actual = datetime(2025, 5, 23)
@@ -77,4 +77,16 @@ Para confirmar su proyección, será clave evaluar su evolución en consistencia
 Se recomienda un seguimiento continuo y análisis tácticos detallados para confirmar su tendencia positiva a largo plazo.
 """
 
-    return generar_conclusion_gemini(prompt, temperature=0.25)
+    try:
+        response = requests.post(
+            "https://JuanmaCM7-gemini-endpoint.hf.space/generate",
+            json={"prompt": prompt},
+            timeout=30
+        )
+        result = response.json()
+        if "result" in result:
+            return result["result"]
+        else:
+            return f"❌ Error del servidor IA: {result.get('error', 'Respuesta inesperada')}"
+    except Exception as e:
+        return f"❌ Error al contactar con la IA: {e}"

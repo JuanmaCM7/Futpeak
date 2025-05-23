@@ -10,3 +10,4 @@ flecha-curva.png
 futpeak-clean/
 __pycache__/
 .env
+.toml
