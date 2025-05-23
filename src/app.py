@@ -155,6 +155,11 @@ img {
     border-radius: 50%;
     border: 3px solid #948e8e;
 }
+            
+:root, html, body {
+    color-scheme: light !important;
+    background-color: white !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
