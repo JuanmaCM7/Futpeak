@@ -19,22 +19,51 @@ from styles.theme import apply_background
 st.set_page_config(page_title="Futpeak", page_icon="⚽", layout="wide", initial_sidebar_state="expanded")
 # ⚠️ Advertencia si el usuario tiene modo oscuro activado
 st.markdown("""
-<script>
-    const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (isDark) {
-        const warning = document.createElement("div");
-        warning.innerText = "⚠️ Esta app está optimizada para modo claro. Si ves errores visuales, prueba cambiando el tema del navegador o del sistema.";
-        warning.style.backgroundColor = "#fff3cd";
-        warning.style.color = "#856404";
-        warning.style.padding = "12px";
-        warning.style.borderRadius = "8px";
-        warning.style.marginBottom = "16px";
-        warning.style.fontSize = "1rem";
-        warning.style.fontWeight = "bold";
-        warning.style.boxShadow = "1px 1px 5px rgba(0,0,0,0.1)";
-        document.body.insertBefore(warning, document.body.firstChild);
+<style>
+/* ✅ SELECTBOX BASE */
+div[data-baseweb="select"] {
+    border-radius: 6px !important;
+    font-family: 'Inter', sans-serif !important;
+}
+
+/* 🌞 Modo claro */
+@media (prefers-color-scheme: light) {
+    div[data-baseweb="select"] {
+        background-color: white !important;
+        color: black !important;
+        border: 1px solid #ccc !important;
     }
-</script>
+    div[data-baseweb="select"] * {
+        color: black !important;
+    }
+    div[data-baseweb="menu"] div[role="option"] {
+        background-color: white !important;
+        color: black !important;
+    }
+    div[data-baseweb="menu"] div[role="option"][aria-selected="true"] span {
+        font-weight: bold !important;
+    }
+}
+
+/* 🌚 Modo oscuro */
+@media (prefers-color-scheme: dark) {
+    div[data-baseweb="select"] {
+        background-color: #333 !important;
+        color: white !important;
+        border: 1px solid #666 !important;
+    }
+    div[data-baseweb="select"] * {
+        color: white !important;
+    }
+    div[data-baseweb="menu"] div[role="option"] {
+        background-color: #444 !important;
+        color: white !important;
+    }
+    div[data-baseweb="menu"] div[role="option"][aria-selected="true"] span {
+        font-weight: bold !important;
+    }
+}
+</style>
 """, unsafe_allow_html=True)
 # Fondo
 apply_background()
