@@ -1,7 +1,6 @@
 alembic==1.15.2
 altair==5.5.0
 annotated-types==0.7.0
-anyio @ file:///C:/b/abs_31grv7a7bl/croot/anyio_1729121290992/work
 argon2-cffi @ file:///opt/conda/conda-bld/argon2-cffi_1645000214183/work
 argon2-cffi-bindings @ file:///C:/b/abs_f11axiliot/croot/argon2-cffi-bindings_1736182463870/work
 asgiref==3.8.1
