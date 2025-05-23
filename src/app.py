@@ -15,7 +15,8 @@ from data_loader import (
 from model_runner import predict_and_project_player
 from player_processing import build_player_df, summarize_basic_stats
 from stats import plot_player_stats, plot_rating_projection, plot_minutes_per_year  
-from descriptions import generar_conclusion
+from descriptions import generar_conclusion_completa
+
 from styles.theme import apply_background
 
 
@@ -227,7 +228,9 @@ with col3:
     else:
         st.warning("⚠️ Selecciona un jugador para ver la proyección.")
 
-conclusion_text = generar_conclusion(player_id)
+conclusion_text = generar_conclusion_completa(player_id)
+conclusion_text = conclusion_text.replace("## ", "")
+
 
 st.markdown(f"""
 <div class='block-card'>
