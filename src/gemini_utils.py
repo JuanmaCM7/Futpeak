@@ -3,17 +3,6 @@ from functools import wraps
 from tenacity import retry, stop_after_attempt, wait_random, retry_if_exception_type
 import google.generativeai as genai
 
-# 🌍 Cargar .env solo en local
-if not os.getenv("GOOGLE_API_KEY"):
-    try:
-        from dotenv import load_dotenv
-        from pathlib import Path
-        dotenv_path = Path(".env").resolve()
-        load_dotenv(dotenv_path)
-    except Exception:
-        pass  # Si falla, seguirá sin API KEY y mostrará el aviso en la app
-
-# 🎯 Decorador con retry que conserva los argumentos
 def with_retry(func):
     @retry(
         stop=stop_after_attempt(3),
