@@ -17,20 +17,20 @@ from styles.theme import apply_background
 # Configuración general
 st.set_page_config(page_title="Futpeak", page_icon="⚽", layout="wide", initial_sidebar_state="expanded")
 
-# CSS incrustado directamente para fuentes, colores y estilos esenciales
 st.markdown("""
 <style>
+/* === FUENTES === */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Inter:wght@400;600&display=swap');
 
-/* Oculta la barra superior */
+/* === BARRA SUPERIOR === */
 header[data-testid="stHeader"] {
     display: none !important;
 }
 
+/* === BASE GENERAL === */
 html {
-    font-size: 90% !important;
+    font-size: 90% !important;  /* Zoom-out leve para pantallas pequeñas */
 }
-
 html, body, .stApp {
     font-family: 'Inter', sans-serif !important;
     color: #ffffff;
@@ -40,19 +40,18 @@ html, body, .stApp {
     overflow-y: auto !important;
     overflow-x: hidden !important;
 }
-
 .block-container {
     padding-top: 0.5rem !important;
     padding-bottom: 2rem !important;
     max-width: 100vw !important;
     margin: 0 auto !important;
 }
-
 section.main > div {
     max-width: 100vw !important;
     padding-top: 0 !important;
 }
 
+/* === TIPOGRAFÍA === */
 h1, h2, h3, h4,
 .block-card h3,
 [data-testid="stSidebar"] h2 {
@@ -61,13 +60,16 @@ h1, h2, h3, h4,
     color: #FFD700 !important;
     text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
 }
-
 p, span, li, ul, ol, td, th {
     font-family: 'Inter', sans-serif !important;
     font-weight: 400 !important;
     color: #ffffff;
 }
+html, body, .stApp, p, span, div, li, td, th, h1, h2, h3, h4, h5, h6 {
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
 
+/* === TARJETAS PERSONALIZADAS === */
 .block-card {
     background-color: rgba(10, 10, 10, 0.75);
     padding: 1.5rem;
@@ -79,87 +81,36 @@ p, span, li, ul, ol, td, th {
     color: #ffffff !important;
 }
 
+/* === SIDEBAR === */
 [data-testid="stSidebar"] {
     background-color: rgba(10, 30, 63, 0.7) !important;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     z-index: 10;
 }
-
 [data-testid="stSidebar"] > div:first-child {
     padding: 1rem 1.5rem 2rem 1.5rem !important;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     gap: 1.5rem;
-    z-index: 10;
 }
-
+[data-testid="stSidebarNav"] {
+    display: none !important;
+}
 .sidebar-logo-container {
     margin-top: -0.5rem;
     margin-bottom: 0.2rem;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
 }
-
 .sidebar-logo-container img {
-    width: 180px;
+    width: 200px;
     height: auto;
 }
 
-[data-testid="stSidebarNav"] {
-    display: none !important;
-}
-
-div[data-baseweb="select"] {
-    background-color: white !important;
-    color: black !important;
-    border: 1px solid #ccc !important;
-    border-radius: 6px !important;
-    box-shadow: none !important;
-}
-
-div[data-baseweb="select"] input {
-    background-color: white !important;
-    color: black !important;
-}
-
-div[data-baseweb="select"] * {
-    color: black !important;
-}
-
-div[data-baseweb="select"]:hover,
-div[data-baseweb="select"]:focus {
-    background-color: white !important;
-    color: black !important;
-    border-color: #ccc !important;
-}
-
-div[data-baseweb="menu"] div[role="option"] {
-    background-color: white !important;
-    color: black !important;
-}
-div[data-baseweb="menu"] div[role="option"][aria-selected="true"] span {
-    font-weight: 700 !important;
-}
-
-
-.stImage > div {
-    border: none !important;
-    box-shadow: none !important;
-}
-
-img {
-    border-radius: 50%;
-    border: 3px solid #948e8e;
-}
-
-html, body, .stApp, p, span, div, li, td, th, h1, h2, h3, h4, h5, h6 {
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-}
-            
-/* Re-define selectbox container y menú desplegable */
+/* === SELECTBOX FIX COMPLETO === */
 div[data-baseweb="select"] {
     background-color: white !important;
     color: black !important;
@@ -167,28 +118,46 @@ div[data-baseweb="select"] {
     border: 1px solid #ccc !important;
     font-family: 'Inter', sans-serif !important;
     font-size: 0.95rem !important;
-    z-index: 99999 !important;
+    z-index: 10000 !important;
 }
-
 div[data-baseweb="select"] input {
     color: black !important;
     background-color: white !important;
-    z-index: 99999 !important;
+    z-index: 10000 !important;
 }
-
+div[data-baseweb="select"] * {
+    color: black !important;
+}
+div[data-baseweb="menu"] div[role="option"] {
+    background-color: white !important;
+    color: black !important;
+}
+div[data-baseweb="menu"] div[role="option"][aria-selected="true"] span {
+    font-weight: 700 !important;
+}
 div[data-baseweb="popover"] {
-    z-index: 100000 !important;
     background-color: white !important;
     color: black !important;
     border: 1px solid #ccc !important;
+    z-index: 10000 !important;
 }
-
 div[data-baseweb="popover"] * {
     color: black !important;
     font-family: 'Inter', sans-serif !important;
 }
+
+/* === IMÁGENES === */
+.stImage > div {
+    border: none !important;
+    box-shadow: none !important;
+}
+img {
+    border-radius: 50%;
+    border: 3px solid #948e8e;
+}
 </style>
 """, unsafe_allow_html=True)
+
 
 
 apply_background()
