@@ -50,7 +50,7 @@ apply_background()
 sleep_duration = 1.0 if os.getenv("STREAMLIT_SERVER_HEADLESS") == "1" else 0.5
 
 # Función auxiliar robusta para mostrar figuras
-@st.cache_resource(show_spinner=False)
+
 def safe_plot(func, *args, sleep=1.0, **kwargs):
     try:
         with st.spinner("Cargando gráfico..."):
