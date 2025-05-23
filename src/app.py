@@ -91,7 +91,9 @@ with st.sidebar:
         index=0,
         label_visibility="collapsed"
     )
-
+    # 🔑 Definir player_id fuera del sidebar para usarlo globalmente
+    id_series = metadata.loc[metadata["Player_name"] == selected_player, "Player_ID"]
+    player_id = id_series.iloc[0] if not id_series.empty else None
     st.markdown("""
             <p style="font-size: 0.85rem; color: #CCCCCC; margin-top: 0.2rem; line-height: 1.2;">
             ⚙️ <em>Herramienta en desarrollo:</em> próximamente añadiremos variables como traspasos, historial de lesiones y más métricas avanzadas.
