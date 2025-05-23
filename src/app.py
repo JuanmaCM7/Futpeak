@@ -17,56 +17,135 @@ from styles.theme import apply_background
 
 # Configuración básica de la app
 st.set_page_config(page_title="Futpeak", page_icon="⚽", layout="wide", initial_sidebar_state="expanded")
-# ⚠️ Advertencia si el usuario tiene modo oscuro activado
-st.markdown("""
-<script>
-    const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (isDark) {
-        const warning = document.createElement("div");
-        warning.innerText = "⚠️ Esta app está optimizada para modo claro. Si ves errores visuales, prueba cambiando el tema del navegador o del sistema.";
-        warning.style.backgroundColor = "#fff3cd";
-        warning.style.color = "#856404";
-        warning.style.padding = "12px";
-        warning.style.borderRadius = "8px";
-        warning.style.marginBottom = "16px";
-        warning.style.fontSize = "1rem";
-        warning.style.fontWeight = "bold";
-        warning.style.boxShadow = "1px 1px 5px rgba(0,0,0,0.1)";
-        document.body.insertBefore(warning, document.body.firstChild);
-    }
-</script>
-""", unsafe_allow_html=True)
+
+# CSS incrustado
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Inter:wght@400;600&display=swap');
 
-/* === FUENTES Y COLORES BÁSICOS === */
+header[data-testid="stHeader"] {
+    display: none !important;
+}
+
+html {
+    font-size: 90% !important;
+}
+
 html, body, .stApp {
     font-family: 'Inter', sans-serif !important;
     color: #ffffff;
     background-color: transparent;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
 }
 
-/* TÍTULOS EN DORADO */
-h1, h2, h3, h4 {
+.block-container {
+    padding-top: 0.5rem !important;
+    padding-bottom: 2rem !important;
+    max-width: 100vw !important;
+    margin: 0 auto !important;
+}
+
+section.main > div {
+    max-width: 100vw !important;
+    padding-top: 0 !important;
+}
+
+h1, h2, h3, h4,
+.block-card h3,
+[data-testid="stSidebar"] h2 {
     font-family: 'Montserrat', sans-serif !important;
     font-weight: 700 !important;
     color: #FFD700 !important;
     text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
 }
 
-/* TEXTOS GENERALES */
-p, span, li, td, th {
+p, span, li, ul, ol, td, th {
     font-family: 'Inter', sans-serif !important;
     font-weight: 400 !important;
+    color: #ffffff;
+}
+
+.block-card {
+    background-color: rgba(10, 10, 10, 0.75);
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
+    margin-bottom: 1.5rem;
+}
+.block-card p, .block-card span {
     color: #ffffff !important;
 }
 
-/* PEQUEÑA SOMBRA PARA CONTRASTE */
-html, body, .stApp, p, span, h1, h2, h3, h4 {
+[data-testid="stSidebar"] {
+    background-color: rgba(10, 30, 63, 0.7) !important;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 10;
+}
+
+[data-testid="stSidebar"] > div:first-child {
+    padding: 1rem 1.5rem 2rem 1.5rem !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    z-index: 10;
+}
+
+.sidebar-logo-container {
+    margin-top: -0.5rem;
+    margin-bottom: 0.2rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.sidebar-logo-container img {
+    width: 180px;
+    height: auto;
+}
+
+[data-testid="stSidebarNav"] {
+    display: none !important;
+}
+
+div[data-baseweb="select"] {
+    background-color: white !important;
+    border-radius: 6px !important;
+    z-index: 9999 !important;
+    position: relative !important;
+}
+
+div[data-baseweb="select"] * {
+    color: black !important;
+    z-index: 9999 !important;
+    position: relative !important;
+}
+
+div[data-baseweb="menu"] div[role="option"] {
+    color: black !important;
+    background-color: white !important;
+}
+
+div[data-baseweb="menu"] div[role="option"][aria-selected="true"] span {
+    color: black !important;
+    font-weight: 700 !important;
+}
+
+.stImage > div {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+img {
+    border-radius: 50%;
+    border: 3px solid #948e8e;
+}
+
+html, body, .stApp, p, span, div, li, td, th, h1, h2, h3, h4, h5, h6 {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 </style>
@@ -75,13 +154,16 @@ html, body, .stApp, p, span, h1, h2, h3, h4 {
 # Fondo
 apply_background()
 
-# Sidebar con logo y selector
+# App
+metadata = load_future_metadata()
+player_names = sorted(metadata["Player_name"].dropna().unique())
+
 with st.sidebar:
     logo_path = Path(__file__).parent / "assets" / "logo_no_bg_preview_3.png"
     if logo_path.exists():
         with open(logo_path, "rb") as f:
             encoded = base64.b64encode(f.read()).decode()
-        st.markdown(f"<img src='data:image/png;base64,{encoded}' width='180'/>", unsafe_allow_html=True)
+        st.markdown(f"<img src='data:image/png;base64,{encoded}' class='sidebar-logo-container' />", unsafe_allow_html=True)
 
     st.subheader("ℹ️ ¿Cómo funciona Futpeak?")
     st.markdown("""
@@ -90,12 +172,13 @@ with st.sidebar:
         3. Compara con grupos de jugadores similares.
     """)
 
-    metadata = load_future_metadata()
-    player_names = sorted(metadata["Player_name"].dropna().unique())
+    selected_player = st.selectbox("🕤 Selecciona un jugador:", player_names)
 
-    selected_player = st.selectbox("👤 Selecciona un jugador:", player_names)
-
-    player_id = metadata.loc[metadata["Player_name"] == selected_player, "Player_ID"].values[0]
+    st.markdown("""
+    <p style="font-size: 0.85rem; color: #ffecb3; background-color: #5c4f00; padding: 8px; border-radius: 6px; margin-top: 6px;">
+    ⚠️ Si el selector no se ve correctamente, cambia tu navegador o dispositivo a <strong>modo claro</strong>.
+    </p>
+    """, unsafe_allow_html=True)
 
     st.markdown("_Herramienta en desarrollo: próximamente añadiremos variables como traspasos, historial de lesiones y más métricas avanzadas._")
     st.markdown("""
@@ -104,11 +187,11 @@ with st.sidebar:
         </a>
     """, unsafe_allow_html=True)
 
-# Título principal
+player_id = metadata.loc[metadata["Player_name"] == selected_player, "Player_ID"].values[0]
+
 st.title("🏟️ ¡Bienvenido a Futpeak!")
 st.write("Futpeak es una herramienta de scouting que te ayuda a evaluar y proyectar el potencial de jóvenes futbolistas basándose en datos de jugadores con trayectorias profesionales similares.")
 
-# Columnas principales
 col1, col2, col3 = st.columns([0.6, 0.7, 1])
 
 with col1:
@@ -143,7 +226,6 @@ with col3:
     fig_proj = plot_rating_projection(selected_player, seasonal, group_curve, label)
     st.pyplot(fig_proj)
 
-# Conclusión final
 conclusion_text = generar_conclusion(player_id)
 st.subheader("🔮 Conclusiones")
 st.markdown(conclusion_text)
