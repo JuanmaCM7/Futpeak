@@ -46,7 +46,6 @@ google-api-core==2.25.0rc1
 google-api-python-client==2.170.0
 google-auth==2.40.2
 google-auth-httplib2==0.2.0
-google-generativeai
 googleapis-common-protos==1.70.0
 graphviz==0.20.3
 greenlet==3.2.2
@@ -205,3 +204,5 @@ widgetsnbextension
 win-inet-pton
 wsproto==1.2.0
 xgboost==3.0.0
+--extra-index-url https://pypi.org/simple/
+google-generativeai==0.8.5
