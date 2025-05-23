@@ -5,26 +5,21 @@ header[data-testid="stHeader"] {
     display: none !important;
 }
 
-/* === BASE GENERAL === */
-html {
-    font-size: 90% !important; /* Simula un zoom-out visual */
-}
-
+/* ---------- BASE GENERAL ---------- */
 html, body, .stApp {
     font-family: 'Inter', sans-serif !important;
     color: #ffffff;
-    background-color: transparent;
     margin: 0 !important;
     padding: 0 !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
+    height: 100%;
+    background-color: transparent;
 }
 
-.block-container {
-    padding-top: 0.5rem !important;
-    padding-bottom: 2rem !important;
-    max-width: 100vw !important;
-    margin: 0 auto !important;
+/* ✅ Forzar layout pantalla completa sin franja blanca */
+body, .main, .block-container {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    max-width: 100% !important;
 }
 
 section.main > div {
@@ -32,7 +27,7 @@ section.main > div {
     padding-top: 0 !important;
 }
 
-/* TEXTOS Y TÍTULOS */
+/* ---------- TÍTULOS AMARILLOS ---------- */
 h1, h2, h3, h4,
 .block-card h3,
 [data-testid="stSidebar"] h2 {
@@ -42,13 +37,14 @@ h1, h2, h3, h4,
     text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
 }
 
+/* ---------- TEXTO BLANCO (SIN AFECTAR SELECTBOX) ---------- */
 p, span, li, ul, ol, td, th {
     font-family: 'Inter', sans-serif !important;
     font-weight: 400 !important;
     color: #ffffff;
 }
 
-/* TARJETAS */
+/* ---------- TARJETAS ---------- */
 .block-card {
     background-color: rgba(10, 10, 10, 0.75);
     padding: 1.5rem;
@@ -60,23 +56,49 @@ p, span, li, ul, ol, td, th {
     color: #ffffff !important;
 }
 
-/* SIDEBAR */
+/* ---------- SIDEBAR ---------- */
 [data-testid="stSidebar"] {
     background-color: rgba(10, 30, 63, 0.7) !important;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    z-index: 10;
 }
 
+/* ---------- SELECTBOX ---------- */
+div[data-baseweb="select"] {
+    background-color: white !important;
+    border-radius: 6px !important;
+}
+div[data-baseweb="select"] * {
+    color: black !important;
+}
+div[data-baseweb="menu"] div[role="option"] {
+    color: black !important;
+    background-color: white !important;
+}
+div[data-baseweb="menu"] div[role="option"][aria-selected="true"] span {
+    color: black !important;
+    font-weight: 700 !important;
+}
+
+/* ---------- IMÁGENES ---------- */
+.stImage > div {
+    border: none !important;
+    box-shadow: none !important;
+}
+img {
+    border-radius: 50%;
+    border: 3px solid #948e8e;
+}
+
+/* ---------- SIDEBAR LAYOUT ---------- */
 [data-testid="stSidebar"] > div:first-child {
-    padding: 1rem 1.5rem 2rem 1.5rem !important;
+    padding: 0.5rem 1.5rem 2rem 1.5rem !important; /* top, right, bottom, left */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     gap: 1.5rem;
-    z-index: 10;
+    min-height: 100vh;
 }
-
 .sidebar-logo-container {
     margin-top: -0.5rem;
     margin-bottom: 0.2rem;
@@ -84,53 +106,17 @@ p, span, li, ul, ol, td, th {
     justify-content: flex-start;
     align-items: center;
 }
-
 .sidebar-logo-container img {
     width: 180px;
     height: auto;
 }
-
 [data-testid="stSidebarNav"] {
     display: none !important;
 }
 
-/* SELECTBOX */
-div[data-baseweb="select"] {
-    background-color: white !important;
-    border-radius: 6px !important;
-    z-index: 9999 !important;
-    position: relative !important;
-}
-
-div[data-baseweb="select"] * {
-    color: black !important;
-    z-index: 9999 !important;
-    position: relative !important;
-}
-
-div[data-baseweb="menu"] div[role="option"] {
-    color: black !important;
-    background-color: white !important;
-}
-
-div[data-baseweb="menu"] div[role="option"][aria-selected="true"] span {
-    color: black !important;
-    font-weight: 700 !important;
-}
-
-/* IMÁGENES */
-.stImage > div {
-    border: none !important;
-    box-shadow: none !important;
-}
-
-img {
-    border-radius: 50%;
-    border: 3px solid #948e8e;
-}
-
-/* SOMBRA EN TEXTOS */
+/* ---------- SOMBRA LEVE EN TODO EL TEXTO ---------- */
 html, body, .stApp, p, span, div, li, td, th, h1, h2, h3, h4, h5, h6 {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
+
 
