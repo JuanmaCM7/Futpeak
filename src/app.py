@@ -43,16 +43,7 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
-st.markdown("""
-    <style>
-    /* Garantiza que el sidebar se muestre completo con scroll si hay mucho contenido */
-    section[data-testid="stSidebar"] {
-        height: 100vh !important;
-        overflow-y: auto !important;
-        padding-bottom: 2rem;
-    }
-    </style>
-""", unsafe_allow_html=True)
+
 
 apply_background()
 
@@ -102,25 +93,16 @@ with st.sidebar:
     )
 
     st.markdown("""
-        <p style="font-size: 0.85rem; background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 6px; margin-bottom: 0.5rem; font-weight: bold;">
-        ⚠️ Si el selector no se ve correctamente, cambia a <strong>modo claro</strong>.
-        </p>
-    """, unsafe_allow_html=True)
-
-    id_series = metadata.loc[metadata["Player_name"] == selected_player, "Player_ID"]
-    player_id = id_series.iloc[0] if not id_series.empty else None
-
-    # ➕ Mensaje de mejoras futuras
+            <p style="font-size: 0.85rem; color: #CCCCCC; margin-top: 0.2rem; line-height: 1.2;">
+            ⚙️ <em>Herramienta en desarrollo:</em> próximamente añadiremos variables como traspasos, historial de lesiones y más métricas avanzadas.
+            </p>
+        """, unsafe_allow_html=True)
     st.markdown("""
-    <p style="
-        font-size: 0.85rem;
-        color: #CCCCCC;
-        margin-top: 0.2rem;
-        line-height: 1.2;
-    ">
-    ⚙️ <em>Herramienta en desarrollo:</em> próximamente añadiremos variables como 
-    traspasos, historial de lesiones y más métricas avanzadas.
-    </p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfuuXMKtFDsAtQzLXoXuIlxOKQM3oPiEQtpyBJrfbxazAk2GQ/viewform?usp=dialog" target="_blank">
+            <button style="background-color:#FFD700; color:black; font-weight:bold; padding:0.5em 1em; margin-top: 0.5rem; border:none; border-radius:8px; font-size:1rem; cursor:pointer; width:100%;">
+                📝 Enviar feedback
+            </button>
+        </a>
     """, unsafe_allow_html=True)
 
     # 📝 Botón de feedback
