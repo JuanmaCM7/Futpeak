@@ -17,7 +17,14 @@ from styles.theme import apply_background
 
 # Configuración básica de la app
 st.set_page_config(page_title="Futpeak", page_icon="⚽", layout="wide", initial_sidebar_state="expanded")
-
+st.markdown("""
+<style>
+:root, html, body, .stApp {
+    color-scheme: light !important;
+    forced-color-adjust: none !important;
+    background-color: transparent !important;
+}
+""", unsafe_allow_html=True)
 # Fondo
 apply_background()
 
