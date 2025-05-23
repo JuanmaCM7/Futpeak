@@ -51,14 +51,39 @@ apply_background()
 sleep_duration = 1.0 if os.getenv("STREAMLIT_SERVER_HEADLESS") == "1" else 0.5
 
 # ---------------------------
-# ⏳ BLOQUE DE CARGA
+# ⏳ BLOQUE DE CARGA TOTAL
 # ---------------------------
 with st.spinner("Cargando datos y gráficos..."):
     metadata = load_future_metadata()
     player_names = sorted(metadata["Player_name"].dropna().unique())
+    selected_player = st.session_state.get("selected_player", player_names[0] if player_names else None)
 
-    selected_player = player_names[0] if player_names else None
+    id_series = metadata.loc[metadata["Player_name"] == selected_player, "Player_ID"]
+    player_id = id_series.iloc[0] if not id_series.empty else None
 
+    img = None
+    meta = {}
+    summary_df = pd.DataFrame()
+    seasonal = group_curve = label = None
+    fig_stats = fig_minutes = fig_proj = None
+    conclusion_text = ""
+
+    if player_id:
+        try:
+            img_path = get_player_image_path(selected_player, metadata)
+            if img_path and img_path.exists():
+                img = Image.open(img_path)
+            meta = get_metadata_by_player(selected_player, future=True)
+            summary_df = summarize_basic_stats(build_player_df(player_id))
+            label, seasonal, group_curve = predict_and_project_player(player_id)
+            fig_stats = plot_player_stats(player_id)
+            fig_minutes = plot_minutes_per_year(player_id)
+            fig_proj = plot_rating_projection(selected_player, seasonal, group_curve, label)
+            conclusion_text = generar_conclusion_completa(player_id).replace("## ", "")
+            time.sleep(sleep_duration)
+        except Exception as e:
+            st.error(f"❌ Error al cargar datos del jugador: {e}")
+            st.stop()
 
 # ---------------------------
 # 📌 SIDEBAR
@@ -90,43 +115,17 @@ with st.sidebar:
     selected_player = st.selectbox(
         label="🕤 Selecciona un jugador:",
         options=player_names,
-        index=0,
-        label_visibility="collapsed"
+        index=player_names.index(selected_player) if selected_player in player_names else 0,
+        label_visibility="collapsed",
+        key="selected_player"
     )
-
-    # 🔑 Obtener player_id tras selección
-    id_series = metadata.loc[metadata["Player_name"] == selected_player, "Player_ID"]
-    player_id = id_series.iloc[0] if not id_series.empty else None
-
-    # 🔁 Cargar dinámicamente lo que depende del jugador seleccionado
-    img = None
-    meta = {}
-    summary_df = pd.DataFrame()
-    seasonal = group_curve = label = None
-    fig_stats = fig_minutes = fig_proj = None
-
-    if player_id:
-        try:
-            with st.spinner("Cargando datos del jugador..."):
-                img_path = get_player_image_path(selected_player, metadata)
-                if img_path and img_path.exists():
-                    img = Image.open(img_path)
-                meta = get_metadata_by_player(selected_player, future=True)
-                summary_df = summarize_basic_stats(build_player_df(player_id))
-                label, seasonal, group_curve = predict_and_project_player(player_id)
-                fig_stats = plot_player_stats(player_id)
-                fig_minutes = plot_minutes_per_year(player_id)
-                fig_proj = plot_rating_projection(selected_player, seasonal, group_curve, label)
-                time.sleep(sleep_duration)
-        except Exception as e:
-            st.error(f"❌ Error al cargar datos del jugador: {e}")
-            st.stop()
 
     st.markdown("""
         <p style="font-size: 0.85rem; color: #CCCCCC; margin-top: 0.2rem; line-height: 1.2;">
         ⚙️ <em>Herramienta en desarrollo:</em> próximamente añadiremos variables como traspasos, historial de lesiones y más métricas avanzadas.
         </p>
     """, unsafe_allow_html=True)
+
     st.markdown("""
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSfuuXMKtFDsAtQzLXoXuIlxOKQM3oPiEQtpyBJrfbxazAk2GQ/viewform?usp=dialog" target="_blank">
             <button style="background-color:#FFD700; color:black; font-weight:bold; padding:0.5em 1em; margin-top: 0.5rem; border:none; border-radius:8px; font-size:1rem; cursor:pointer; width:100%;">
@@ -193,16 +192,12 @@ with col3:
 # ---------------------------
 # 🔮 CONCLUSIONES
 # ---------------------------
-if player_id:
-    try:
-        conclusion_text = generar_conclusion_completa(player_id).replace("## ", "")
-        st.markdown(f"""
-        <div class='block-card'>
-          <h3>🌠 Conclusiones</h3>
-          <p style="font-size:20px; line-height:1.4;">
-            {conclusion_text}
-          </p>
-        </div>
-        """, unsafe_allow_html=True)
-    except Exception as e:
-        st.error(f"❌ Error generando conclusión: {e}")
+if conclusion_text:
+    st.markdown(f"""
+    <div class='block-card'>
+      <h3>🌠 Conclusiones</h3>
+      <p style="font-size:20px; line-height:1.4;">
+        {conclusion_text}
+      </p>
+    </div>
+    """, unsafe_allow_html=True)
