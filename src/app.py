@@ -58,30 +58,7 @@ with st.spinner("Cargando datos y gráficos..."):
     player_names = sorted(metadata["Player_name"].dropna().unique())
 
     selected_player = player_names[0] if player_names else None
-    id_series = metadata.loc[metadata["Player_name"] == selected_player, "Player_ID"]
-    player_id = id_series.iloc[0] if not id_series.empty else None
 
-    img = None
-    meta = {}
-    summary_df = pd.DataFrame()
-    seasonal = group_curve = label = None
-    fig_stats = fig_minutes = fig_proj = None
-
-    if player_id:
-        try:
-            img_path = get_player_image_path(selected_player, metadata)
-            if img_path and img_path.exists():
-                img = Image.open(img_path)
-            meta = get_metadata_by_player(selected_player, future=True)
-            summary_df = summarize_basic_stats(build_player_df(player_id))
-            label, seasonal, group_curve = predict_and_project_player(player_id)
-            fig_stats = plot_player_stats(player_id)
-            fig_minutes = plot_minutes_per_year(player_id)
-            fig_proj = plot_rating_projection(selected_player, seasonal, group_curve, label)
-            time.sleep(sleep_duration)
-        except Exception as e:
-            st.error(f"❌ Error al precargar datos: {e}")
-            st.stop()
 
 # ---------------------------
 # 📌 SIDEBAR
@@ -116,6 +93,34 @@ with st.sidebar:
         index=0,
         label_visibility="collapsed"
     )
+
+    # 🔑 Obtener player_id tras selección
+    id_series = metadata.loc[metadata["Player_name"] == selected_player, "Player_ID"]
+    player_id = id_series.iloc[0] if not id_series.empty else None
+
+    # 🔁 Cargar dinámicamente lo que depende del jugador seleccionado
+    img = None
+    meta = {}
+    summary_df = pd.DataFrame()
+    seasonal = group_curve = label = None
+    fig_stats = fig_minutes = fig_proj = None
+
+    if player_id:
+        try:
+            with st.spinner("Cargando datos del jugador..."):
+                img_path = get_player_image_path(selected_player, metadata)
+                if img_path and img_path.exists():
+                    img = Image.open(img_path)
+                meta = get_metadata_by_player(selected_player, future=True)
+                summary_df = summarize_basic_stats(build_player_df(player_id))
+                label, seasonal, group_curve = predict_and_project_player(player_id)
+                fig_stats = plot_player_stats(player_id)
+                fig_minutes = plot_minutes_per_year(player_id)
+                fig_proj = plot_rating_projection(selected_player, seasonal, group_curve, label)
+                time.sleep(sleep_duration)
+        except Exception as e:
+            st.error(f"❌ Error al cargar datos del jugador: {e}")
+            st.stop()
 
     st.markdown("""
         <p style="font-size: 0.85rem; color: #CCCCCC; margin-top: 0.2rem; line-height: 1.2;">
