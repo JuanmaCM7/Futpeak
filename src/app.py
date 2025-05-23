@@ -119,59 +119,84 @@ col1, col2, col3 = st.columns([0.7, 1, 1.8], gap="medium")
 
 with col1:
     if player_id is not None:
-        img_path = get_player_image_path(selected_player, metadata)
-        if img_path:
-            img = Image.open(img_path)
-            st.image(img, use_container_width=True)
-        else:
-            st.info("⚠️ Imagen no disponible para este jugador.")
+        try:
+            img_path = get_player_image_path(selected_player, metadata)
+            if img_path and os.path.exists(img_path):
+                img = Image.open(img_path)
+                st.image(img, use_container_width=True)
+            else:
+                st.info("⚠️ Imagen no disponible para este jugador.")
+        except Exception as e:
+            st.warning(f"⚠️ Error al cargar la imagen: {e}")
     else:
         st.error("⚠️ No se encontró el ID del jugador.")
 
     if player_id is not None:
-        meta = get_metadata_by_player(selected_player, future=True)
-        raw_age = str(meta.get("Age", "N/A"))
-        age_display = raw_age.split("-")[0] if "-" in raw_age else raw_age
+        try:
+            meta = get_metadata_by_player(selected_player, future=True)
+            raw_age = str(meta.get("Age", "N/A"))
+            age_display = raw_age.split("-")[0] if "-" in raw_age else raw_age
 
-        summary_df = summarize_basic_stats(build_player_df(player_id))
+            summary_df = summarize_basic_stats(build_player_df(player_id))
 
-        profile_html = f"""
-        <div class='block-card'>
-            <h3>📋 Perfil del jugador</h3>
-            <p><strong>Nombre:</strong> {selected_player}</p>
-            <p><strong>Edad:</strong> {age_display}</p>
-            <p><strong>Posición:</strong> {meta.get('Position', 'N/A')}</p>
-            <p><strong>Minutos jugados:</strong> {int(summary_df['Minutos totales'].iloc[0])}</p>
-        </div>
-        """
-        st.markdown(profile_html, unsafe_allow_html=True)
+            profile_html = f"""
+            <div class='block-card'>
+                <h3>📋 Perfil del jugador</h3>
+                <p><strong>Nombre:</strong> {selected_player}</p>
+                <p><strong>Edad:</strong> {age_display}</p>
+                <p><strong>Posición:</strong> {meta.get('Position', 'N/A')}</p>
+                <p><strong>Minutos jugados:</strong> {int(summary_df['Minutos totales'].iloc[0])}</p>
+            </div>
+            """
+            st.markdown(profile_html, unsafe_allow_html=True)
+        except Exception as e:
+            st.error(f"⚠️ Error al cargar perfil del jugador: {e}")
 
 with col2:
     st.markdown("### 📊 Producción Ofensiva")
-    if player_id is not None:
-        fig_stats = plot_player_stats(player_id)
-        st.pyplot(fig_stats)
-    else:
-        st.warning("⚠️ Selecciona un jugador para ver sus estadísticas.")
+    try:
+        if player_id is not None:
+            fig_stats = plot_player_stats(player_id)
+            if fig_stats:
+                st.pyplot(fig_stats)
+            else:
+                st.warning("⚠️ No se pudo generar la gráfica de producción ofensiva.")
+        else:
+            st.warning("⚠️ Selecciona un jugador para ver sus estadísticas.")
+    except Exception as e:
+        st.error(f"❌ Error al cargar producción ofensiva: {e}")
 
     st.markdown("### ⏱️ Minutos por Año")
-    if player_id is not None:
-        fig_minutes = plot_minutes_per_year(player_id)
-        fig_minutes.set_size_inches(6, 3)
-        st.pyplot(fig_minutes)
-    else:
-        st.warning("⚠️ Selecciona un jugador para ver los minutos por año.")
+    try:
+        if player_id is not None:
+            fig_minutes = plot_minutes_per_year(player_id)
+            if fig_minutes:
+                fig_minutes.set_size_inches(6, 3)
+                st.pyplot(fig_minutes)
+            else:
+                st.warning("⚠️ No se pudo generar la gráfica de minutos.")
+        else:
+            st.warning("⚠️ Selecciona un jugador para ver los minutos por año.")
+    except Exception as e:
+        st.error(f"❌ Error al cargar minutos por año: {e}")
 
 with col3:
     st.markdown("### 📈 Predicción de grupo y evolución")
-    if player_id is not None:
-        label, seasonal, group_curve = predict_and_project_player(player_id)
-        player_name = metadata.loc[metadata["Player_ID"] == player_id, "Player_name"].values[0]
-        fig_proj = plot_rating_projection(player_name, seasonal, group_curve, label)
-        fig_proj.set_size_inches(6, 4)
-        st.pyplot(fig_proj)
-    else:
-        st.warning("⚠️ Selecciona un jugador para ver la proyección.")
+    try:
+        if player_id is not None:
+            label, seasonal, group_curve = predict_and_project_player(player_id)
+            player_name = metadata.loc[metadata["Player_ID"] == player_id, "Player_name"].values[0]
+            fig_proj = plot_rating_projection(player_name, seasonal, group_curve, label)
+            if fig_proj:
+                fig_proj.set_size_inches(6, 4)
+                st.pyplot(fig_proj)
+            else:
+                st.warning("⚠️ No se pudo generar la gráfica de proyección.")
+        else:
+            st.warning("⚠️ Selecciona un jugador para ver la proyección.")
+    except Exception as e:
+        st.error(f"❌ Error al cargar la proyección: {e}")
+
 
 conclusion_text = generar_conclusion_completa(player_id)
 conclusion_text = conclusion_text.replace("## ", "")
