@@ -1,11 +1,4 @@
 import streamlit as st
-
-try:
-    import google.generativeai as genai
-    st.success("✅ google-generativeai está correctamente instalado.")
-except ModuleNotFoundError as e:
-    st.error(f"❌ google-generativeai no está instalado: {e}")
-
 import os
 import google.generativeai as genai
 from functools import wraps
