@@ -103,6 +103,7 @@ PyQt6_sip @ file:///C:/b/abs_f47pmp6xmn/croot/pyqt-split_1744804513582/work/pyqt
 PySocks @ file:///C:/ci_310/pysocks_1642089375450/work
 python-dateutil @ file:///C:/b/abs_3au_koqnbs/croot/python-dateutil_1716495777160/work
 python-json-logger @ file:///C:/b/abs_0cm_mnox0z/croot/python-json-logger_1734370042436/work
+python-dotenv
 pytz @ file:///C:/b/abs_6ap4tsz1ox/croot/pytz_1713974360290/work
 pywin32==308
 pywinpty @ file:///C:/b/abs_883wh7sts8/croot/pywinpty_1741871674963/work
