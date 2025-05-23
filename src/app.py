@@ -57,7 +57,7 @@ sleep_duration = 1.0 if os.getenv("STREAMLIT_SERVER_HEADLESS") == "1" else 0.5
 st.markdown("""
     <style>
         [data-testid="stSidebar"] {
-            padding-top: 0.5rem !important;
+            padding-top: -0.5rem !important;
         }
     </style>
 """, unsafe_allow_html=True)
