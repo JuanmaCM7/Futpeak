@@ -1,6 +1,4 @@
 import streamlit as st
-# Configuración general y estilos
-st.set_page_config(page_title="Futpeak", layout="wide", initial_sidebar_state="expanded")
 from pathlib import Path
 import base64
 from PIL import Image
@@ -20,7 +18,7 @@ from stats import plot_player_stats, plot_rating_projection, plot_minutes_per_ye
 from descriptions import generar_conclusion_completa
 from styles.theme import apply_background
 
-
+st.set_page_config(page_title="Futpeak", layout="wide", initial_sidebar_state="expanded")
 
 # Cargar y aplicar CSS personalizado
 def _load_custom_css():
@@ -28,9 +26,7 @@ def _load_custom_css():
     if css_path.exists():
         with open(css_path, encoding="utf-8") as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-    # Override para eliminar bordes de st.image
-    st.markdown(
-        """
+    st.markdown("""
         <style>
             .stImage > div {
                 border: none !important;
@@ -40,8 +36,7 @@ def _load_custom_css():
                 overflow-y: auto !important;
             }
         </style>
-        """, unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
 
 _load_custom_css()
 apply_background()
@@ -58,21 +53,11 @@ with st.sidebar:
         )
 
     st.markdown("<div style='height:20px;'></div>", unsafe_allow_html=True)
-
-    st.markdown(
-        """
-        <h2 style='
-            white-space: nowrap;
-            margin: 0 0 0.5rem 0;
-            color: #ffffff;
-            font-size: 1rem;
-        '>
+    st.markdown("""
+        <h2 style='white-space: nowrap; margin: 0 0 0.5rem 0; color: #ffffff; font-size: 1rem;'>
             ℹ️ ¿Cómo funciona Futpeak?
         </h2>
-        """,
-        unsafe_allow_html=True
-    )
-
+    """, unsafe_allow_html=True)
     st.info("""
         1. Selecciona un jugador del menú desplegable.  
         2. Visualiza al instante su resumen de carrera y proyección.  
@@ -82,90 +67,53 @@ with st.sidebar:
     metadata = load_future_metadata()
     player_names = sorted(metadata["Player_name"].dropna().unique())
 
-    st.markdown(
-        "<p style='margin:0 0 0.4rem 0; white-space: nowrap; color:#ffffff; font-size:1rem;'>"
-        "👤 Selecciona un jugador:</p>",
-        unsafe_allow_html=True
-    )
+    st.markdown("""
+        <p style='margin:0 0 0.4rem 0; white-space: nowrap; color:#ffffff; font-size:1rem;'>
+        👤 Selecciona un jugador:</p>
+    """, unsafe_allow_html=True)
     selected_player = st.selectbox(
         label="👤 Selecciona un jugador:",
         options=player_names,
         index=0,
         label_visibility="collapsed"
     )
-
     st.markdown("""
-    <style>
-    div[data-baseweb="menu"] [role="option"] {
-        color: black !important;
-    }
-    </style>
+        <style>
+        div[data-baseweb="menu"] [role="option"] {
+            color: black !important;
+        }
+        </style>
     """, unsafe_allow_html=True)
 
-    # ⚠️ Aviso para usuarios en modo oscuro
     st.markdown("""
-    <p style="
-    font-size: 0.85rem;
-    background-color: #fff3cd;
-    color: #856404;
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-    ">
-    ⚠️ Si el selector no se ve correctamente, cambia tu navegador o dispositivo a <strong>modo claro</strong>.
-    </p>
+        <p style="font-size: 0.85rem; background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 6px; margin-bottom: 0.5rem; font-weight: bold;">
+        ⚠️ Si el selector no se ve correctamente, cambia tu navegador o dispositivo a <strong>modo claro</strong>.
+        </p>
     """, unsafe_allow_html=True)
 
     id_series = metadata.loc[metadata["Player_name"] == selected_player, "Player_ID"]
     player_id = id_series.iloc[0] if not id_series.empty else None
 
-    st.markdown(
-        """
-        <p style="
-        font-size: 0.85rem;
-        color: #CCCCCC;
-        margin-top: 0.2rem;
-        line-height: 1.2;
-        ">
-        ⚙️ <em>Herramienta en desarrollo:</em> próximamente añadiremos variables como 
-        traspasos, historial de lesiones y más métricas avanzadas.
+    st.markdown("""
+        <p style="font-size: 0.85rem; color: #CCCCCC; margin-top: 0.2rem; line-height: 1.2;">
+        ⚙️ <em>Herramienta en desarrollo:</em> próximamente añadiremos variables como traspasos, historial de lesiones y más métricas avanzadas.
         </p>
-        """,
-        unsafe_allow_html=True
-    )
-    st.markdown(
-        """
+    """, unsafe_allow_html=True)
+    st.markdown("""
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSfuuXMKtFDsAtQzLXoXuIlxOKQM3oPiEQtpyBJrfbxazAk2GQ/viewform?usp=dialog" target="_blank">
-            <button style="
-                background-color:#FFD700;
-                color:black;
-                font-weight:bold;
-                padding:0.5em 1em;
-                margin-top: 0.5rem;
-                border:none;
-                border-radius:8px;
-                font-size:1rem;
-                cursor:pointer;
-                width:100%;
-            ">
+            <button style="background-color:#FFD700; color:black; font-weight:bold; padding:0.5em 1em; margin-top: 0.5rem; border:none; border-radius:8px; font-size:1rem; cursor:pointer; width:100%;">
                 📝 Enviar feedback
             </button>
         </a>
-        """,
-        unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
 
-st.markdown(
-    """
+st.markdown("""
     <h1 style="font-size:2rem; margin-bottom:0.5rem;">🏟️ ¡Bienvenido a Futpeak!</h1>
     <p style='font-size:1.3rem; line-height:1.5;'>
       Futpeak es una herramienta de scouting que te ayuda a evaluar y proyectar el potencial  
       de jóvenes futbolistas basándose en datos de jugadores con trayectorias profesionales similares.
     </p>
-    """,
-    unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([0.7, 1, 1.8], gap="medium")
 
