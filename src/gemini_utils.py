@@ -1,20 +1,17 @@
 import os
-from pathlib import Path
-from dotenv import load_dotenv
+from functools import wraps
 from tenacity import retry, stop_after_attempt, wait_random, retry_if_exception_type
 import google.generativeai as genai
-from functools import wraps
 
-def load_api_key() -> str:
-    # Intenta detectar si __file__ está definido (no existe en notebooks)
+# 🌍 Cargar .env solo en local
+if not os.getenv("GOOGLE_API_KEY"):
     try:
-        dotenv_path = Path(__file__).resolve().parents[1] / ".env"
-    except NameError:
-        # Estás en un notebook, ajusta la ruta manualmente
-        dotenv_path = Path("../.env").resolve()
-
-    load_dotenv(dotenv_path)
-    return os.getenv("GOOGLE_API_KEY")
+        from dotenv import load_dotenv
+        from pathlib import Path
+        dotenv_path = Path(".env").resolve()
+        load_dotenv(dotenv_path)
+    except Exception:
+        pass  # Si falla, seguirá sin API KEY y mostrará el aviso en la app
 
 # 🎯 Decorador con retry que conserva los argumentos
 def with_retry(func):
@@ -31,11 +28,14 @@ def with_retry(func):
 # 🎯 Función principal para generar conclusión
 @with_retry
 def generar_conclusion_gemini(prompt: str, temperature: float = 0.3) -> str:
-    api_key = load_api_key()
+    api_key = os.getenv("GOOGLE_API_KEY")
+    if not api_key:
+        return "❌ No se ha encontrado la API KEY. Añádela en los secretos de Streamlit o como variable de entorno."
+
     genai.configure(api_key=api_key)
 
     model = genai.GenerativeModel(
-        model_name="models/gemini-1.5-flash",  # ¡Este sí funciona con tu API key!
+        model_name="gemini-1.5-flash",
         generation_config={"temperature": temperature}
     )
 
@@ -44,3 +44,4 @@ def generar_conclusion_gemini(prompt: str, temperature: float = 0.3) -> str:
         return response.text.strip()
     except Exception as e:
         return f"❌ Error generando conclusión: {e}"
+

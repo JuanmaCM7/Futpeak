@@ -16,7 +16,6 @@ from model_runner import predict_and_project_player
 from player_processing import build_player_df, summarize_basic_stats
 from stats import plot_player_stats, plot_rating_projection, plot_minutes_per_year  
 from descriptions import generar_conclusion_completa
-
 from styles.theme import apply_background
 
 
