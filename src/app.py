@@ -44,28 +44,16 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+
 apply_background()
 
 # Determinar si estamos en Streamlit Cloud para controlar los sleeps
 sleep_duration = 1.0 if os.getenv("STREAMLIT_SERVER_HEADLESS") == "1" else 0.5
 
-# Función auxiliar robusta para mostrar figuras
-
-def safe_plot(func, *args, sleep=1.0, **kwargs):
-    try:
-        with st.spinner("Cargando gráfico..."):
-            fig = func(*args, **kwargs)
-            if fig:
-                time.sleep(sleep)
-                st.pyplot(fig)
-            else:
-                st.warning("⚠️ Gráfico no disponible.")
-    except Exception as e:
-        st.error(f"❌ Error al generar el gráfico: {e}")
-
 # ---------------------------
 # 📌 SIDEBAR
 # ---------------------------
+# 🔧 Ajuste visual para subir el sidebar un poco
 st.markdown("""
     <style>
         [data-testid="stSidebar"] {
@@ -126,9 +114,9 @@ with st.sidebar:
         </a>
     """, unsafe_allow_html=True)
 
+# 🔑 Definir player_id fuera del sidebar para usarlo globalmente
 id_series = metadata.loc[metadata["Player_name"] == selected_player, "Player_ID"]
 player_id = id_series.iloc[0] if not id_series.empty else None
-
 # ---------------------------
 # 🏠 CONTENIDO PRINCIPAL
 # ---------------------------
@@ -172,11 +160,28 @@ with col1:
 with col2:
     st.markdown("### 📊 Producción Ofensiva")
     if player_id is not None:
-        safe_plot(plot_player_stats, player_id, sleep=sleep_duration)
+        try:
+            fig_stats = plot_player_stats(player_id)
+            if fig_stats:
+                time.sleep(sleep_duration)
+                st.pyplot(fig_stats)
+            else:
+                st.warning("⚠️ No se pudo generar esta gráfica.")
+        except Exception as e:
+            st.error(f"❌ Error en la gráfica: {e}")
 
     st.markdown("### ⏱️ Minutos por Año")
     if player_id is not None:
-        safe_plot(plot_minutes_per_year, player_id, sleep=sleep_duration)
+        try:
+            fig_minutes = plot_minutes_per_year(player_id)
+            if fig_minutes:
+                fig_minutes.set_size_inches(6, 3)
+                time.sleep(sleep_duration)
+                st.pyplot(fig_minutes)
+            else:
+                st.warning("⚠️ No se pudo generar esta gráfica.")
+        except Exception as e:
+            st.error(f"❌ Error en la gráfica: {e}")
 
 with col3:
     st.markdown("### 📈 Predicción de grupo y evolución")
@@ -184,7 +189,13 @@ with col3:
         try:
             label, seasonal, group_curve = predict_and_project_player(player_id)
             player_name = metadata.loc[metadata["Player_ID"] == player_id, "Player_name"].values[0]
-            safe_plot(plot_rating_projection, player_name, seasonal, group_curve, label, sleep=sleep_duration)
+            fig_proj = plot_rating_projection(player_name, seasonal, group_curve, label)
+            if fig_proj:
+                fig_proj.set_size_inches(6, 4)
+                time.sleep(sleep_duration)
+                st.pyplot(fig_proj)
+            else:
+                st.warning("⚠️ No se pudo generar esta gráfica.")
         except Exception as e:
             st.error(f"❌ Error al generar proyección: {e}")
 
