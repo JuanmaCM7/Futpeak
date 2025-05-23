@@ -18,12 +18,25 @@ from styles.theme import apply_background
 # Configuración básica de la app
 st.set_page_config(page_title="Futpeak", page_icon="⚽", layout="wide", initial_sidebar_state="expanded")
 st.markdown("""
-<style>
-:root, html, body, .stApp {
-    color-scheme: light !important;
-    forced-color-adjust: none !important;
-    background-color: transparent !important;
-}
+    <style>
+        html {
+            color-scheme: light !important;
+        }
+        body {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+
+        /* Reajusta selectbox blanco en todos los casos */
+        div[data-baseweb="select"] {
+            background-color: white !important;
+            color: black !important;
+            border-radius: 6px !important;
+        }
+        div[data-baseweb="select"] * {
+            color: black !important;
+        }
+    </style>
 """, unsafe_allow_html=True)
 # Fondo
 apply_background()
