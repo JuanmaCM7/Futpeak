@@ -53,6 +53,15 @@ sleep_duration = 1.0 if os.getenv("STREAMLIT_SERVER_HEADLESS") == "1" else 0.5
 # ---------------------------
 # 📌 SIDEBAR
 # ---------------------------
+# 🔧 Ajuste visual para subir el sidebar un poco
+st.markdown("""
+    <style>
+        [data-testid="stSidebar"] {
+            padding-top: 0.5rem !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 with st.sidebar:
     logo_path = Path(__file__).parent / "assets" / "logo_no_bg_preview_3.png"
     if logo_path.exists():
