@@ -3,36 +3,28 @@ from pandas import DataFrame
 import pandas as pd
 from data_loader import load_future_matchlogs, load_future_metadata
 from analytics import compute_rating_row
+import streamlit as st
 
-
+@st.cache_data
 def build_player_df(player_id: str) -> DataFrame:
     """
-    Carga y prepara los datos de matchlogs para un jugador:
-    - Convierte Date a datetime.
-    - Convierte Minutes, Goals y Assists a numérico.
-    - Fusiona con meta para calcular Age.
-
-    Devuelve un DataFrame con columnas mínimas:
-    ['Player_ID', 'Date', 'Minutes', 'Goals', 'Assists', ..., 'Age']
+    Carga y prepara los datos de matchlogs para un jugador.
     """
-    # 1) Cargar datos crudos
     matchlogs = load_future_matchlogs()
     metadata = load_future_metadata()
 
-    # 2) Filtrar jugador
     player_df = matchlogs[matchlogs["Player_ID"] == player_id].copy()
     meta_row = metadata[metadata["Player_ID"] == player_id].copy()
+
     if player_df.empty or meta_row.empty:
         raise ValueError(f"Jugador {player_id} no encontrado en los datos.")
 
-    # 3) Conversiones de tipo
     player_df["Date"] = pd.to_datetime(player_df["Date"], errors="coerce")
     player_df["Minutes"] = pd.to_numeric(player_df["Minutes"], errors="coerce").fillna(0)
     player_df["Goals"] = pd.to_numeric(player_df.get("Goals", 0), errors="coerce").fillna(0)
     player_df["Assists"] = pd.to_numeric(player_df.get("Assists", 0), errors="coerce").fillna(0)
     meta_row["Birth_date"] = pd.to_datetime(meta_row["Birth_date"], errors="coerce")
 
-    # 4) Fusionar meta y calcular edad
     player_df = player_df.merge(
         meta_row[["Player_ID", "Birth_date"]],
         on="Player_ID", how="left"
@@ -41,21 +33,14 @@ def build_player_df(player_id: str) -> DataFrame:
 
     return player_df
 
-
 def calculate_rating_per_90(player_df: DataFrame) -> DataFrame:
-    """
-    Añade columna 'rating_per_90' al DataFrame, calculada por compute_rating_row.
-    """
     cols = ['Goals', 'Assists', 'Shots', 'Shots_on_target', 'Yellow_cards', 'Red_cards', 'Minutes']
     player_df[cols] = player_df[cols].apply(pd.to_numeric, errors='coerce').fillna(0)
     player_df["rating_per_90"] = player_df.apply(compute_rating_row, axis=1)
     return player_df
 
-
+@st.cache_data
 def summarize_basic_stats(player_df: DataFrame) -> DataFrame:
-    """
-    Calcula totales y ratios básicos para un jugador.
-    """
     cols = ['Goals', 'Assists', 'Minutes', 'Yellow_cards', 'Red_cards']
     player_df[cols] = player_df[cols].apply(pd.to_numeric, errors='coerce').fillna(0)
 
@@ -84,17 +69,13 @@ def summarize_basic_stats(player_df: DataFrame) -> DataFrame:
         'G+A/90': [ga_per_90],
     })
 
-
+@st.cache_data
 def build_annual_profile(player_df: DataFrame) -> Tuple[DataFrame, DataFrame]:
-    """
-    Construye perfiles anuales pivotados para modelado, asegurando UNA SOLA FILA como salida.
-    """
     player_df = calculate_rating_per_90(player_df)
     player_df['Natural_year'] = player_df['Date'].dt.year
     debut_year = player_df.loc[player_df['Minutes'] > 0, 'Natural_year'].min()
     player_df['year_since_debut'] = player_df['Natural_year'] - debut_year + 1
 
-    # Agregación anual
     career_df = player_df.groupby('year_since_debut').agg({
         'Minutes': 'sum',
         'Goals': 'sum',
@@ -103,14 +84,12 @@ def build_annual_profile(player_df: DataFrame) -> Tuple[DataFrame, DataFrame]:
         'Age': 'mean'
     }).reset_index()
 
-    # Pivoteo
-    # Pivoteo correcto (una sola fila por jugador)
-    # Pivoteo limpio
     pivot_rating = (
         career_df
         .set_index('year_since_debut')['rating_per_90']
         .rename(lambda x: f'rating_year_{x}')
         .to_frame().T
+        .reset_index(drop=True)
     )
 
     pivot_age = (
@@ -118,6 +97,7 @@ def build_annual_profile(player_df: DataFrame) -> Tuple[DataFrame, DataFrame]:
         .set_index('year_since_debut')['Age']
         .rename(lambda x: f'age_year_{x}')
         .to_frame().T
+        .reset_index(drop=True)
     )
 
     pivot_minutes = (
@@ -125,17 +105,12 @@ def build_annual_profile(player_df: DataFrame) -> Tuple[DataFrame, DataFrame]:
         .set_index('year_since_debut')['Minutes']
         .rename(lambda x: f'minutes_year_{x}')
         .to_frame().T
+        .reset_index(drop=True)
     )
-    pivot_rating = pivot_rating.reset_index(drop=True)
-    pivot_age = pivot_age.reset_index(drop=True)
-    pivot_minutes = pivot_minutes.reset_index(drop=True)
 
-    # Concatenar
     player_model_df = pd.concat([pivot_rating, pivot_age, pivot_minutes], axis=1)
     print(f"✅ Filas finales en player_model_df: {player_model_df.shape[0]}")
 
-
-    # Variables derivadas
     for col1, col2, new in [
         ('rating_year_2', 'rating_year_1', 'growth_2_1'),
         ('rating_year_3', 'rating_year_2', 'growth_3_2'),
@@ -145,25 +120,18 @@ def build_annual_profile(player_df: DataFrame) -> Tuple[DataFrame, DataFrame]:
         if col1 in player_model_df.columns and col2 in player_model_df.columns:
             player_model_df[new] = player_model_df[col1] - player_model_df[col2]
 
-    # Promedios agregados
     player_model_df['avg_rating'] = player_model_df.filter(like='rating_year_').mean(axis=1)
     player_model_df['sum_minutes'] = player_model_df.filter(like='minutes_year_').sum(axis=1)
 
-    # Ponderadores por año (capados a 600)
     for i in [1, 2, 3]:
         col = f'minutes_year_{i}'
         if col in player_model_df.columns:
             player_model_df[f'minutes_weight_{i}'] = player_model_df[col].clip(0, 600) / 600
 
-
     return player_model_df, career_df
 
-
-
+@st.cache_data
 def aggregate_stats_by_year(player_df: DataFrame) -> DataFrame:
-    """
-    Genera DataFrame con columnas ['year_since_debut','Goals','Assists','Minutes','Matches','G+A'].
-    """
     df = player_df.copy()
     df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
     df['Minutes'] = pd.to_numeric(df['Minutes'], errors='coerce').fillna(0)
@@ -183,10 +151,7 @@ def aggregate_stats_by_year(player_df: DataFrame) -> DataFrame:
     stats['G+A'] = stats['Goals'] + stats['Assists']
     return stats
 
-
+@st.cache_data
 def get_player_stats(player_id: str) -> DataFrame:
-    """
-    Atajo para obtener DataFrame de G+A, Matches y Minutes por año.
-    """
     df = build_player_df(player_id)
     return aggregate_stats_by_year(df)

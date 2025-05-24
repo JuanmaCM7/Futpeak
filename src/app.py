@@ -51,41 +51,6 @@ apply_background()
 sleep_duration = 1.0 if os.getenv("STREAMLIT_SERVER_HEADLESS") == "1" else 0.5
 
 # ---------------------------
-# ⏳ BLOQUE DE CARGA TOTAL
-# ---------------------------
-with st.spinner("Cargando datos y gráficos..."):
-    metadata = load_future_metadata()
-    player_names = sorted(metadata["Player_name"].dropna().unique())
-    selected_player = st.session_state.get("selected_player", player_names[0] if player_names else None)
-
-    id_series = metadata.loc[metadata["Player_name"] == selected_player, "Player_ID"]
-    player_id = id_series.iloc[0] if not id_series.empty else None
-
-    img = None
-    meta = {}
-    summary_df = pd.DataFrame()
-    seasonal = group_curve = label = None
-    fig_stats = fig_minutes = fig_proj = None
-    conclusion_text = ""
-
-    if player_id:
-        try:
-            img_path = get_player_image_path(selected_player, metadata)
-            if img_path and img_path.exists():
-                img = Image.open(img_path)
-            meta = get_metadata_by_player(selected_player, future=True)
-            summary_df = summarize_basic_stats(build_player_df(player_id))
-            label, seasonal, group_curve = predict_and_project_player(player_id)
-            fig_stats = plot_player_stats(player_id)
-            fig_minutes = plot_minutes_per_year(player_id)
-            fig_proj = plot_rating_projection(selected_player, seasonal, group_curve, label)
-            conclusion_text = generar_conclusion_completa(player_id).replace("## ", "")
-            time.sleep(sleep_duration)
-        except Exception as e:
-            st.error(f"❌ Error al cargar datos del jugador: {e}")
-            st.stop()
-
-# ---------------------------
 # 📌 SIDEBAR
 # ---------------------------
 with st.sidebar:
@@ -112,10 +77,17 @@ with st.sidebar:
         3. Compara con grupos similares.  
     """)
 
+    try:
+        metadata = load_future_metadata()
+        player_names = sorted(metadata["Player_name"].dropna().unique())
+    except Exception as e:
+        st.error(f"❌ Error al cargar metadatos: {e}")
+        st.stop()
+
     selected_player = st.selectbox(
         label="🕤 Selecciona un jugador:",
         options=player_names,
-        index=player_names.index(selected_player) if selected_player in player_names else 0,
+        index=0,
         label_visibility="collapsed",
         key="selected_player"
     )
@@ -135,6 +107,66 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 # ---------------------------
+# 🏗️ BLOQUE PRINCIPAL
+# ---------------------------
+
+if selected_player:
+    with st.spinner("🔄 Cargando perfil completo..."):
+
+        player_id = metadata.loc[metadata["Player_name"] == selected_player, "Player_ID"].values[0]
+
+        img = None
+        meta = {}
+        summary_df = pd.DataFrame()
+        seasonal = group_curve = label = None
+        fig_stats = fig_minutes = fig_proj = None
+        conclusion_text = ""
+
+        try:
+            img_path = get_player_image_path(selected_player, metadata)
+            if img_path and img_path.exists():
+                img = Image.open(img_path)
+        except Exception as e:
+            st.warning(f"⚠️ Imagen no disponible: {e}")
+
+        try:
+            meta = get_metadata_by_player(selected_player, future=True)
+        except Exception as e:
+            st.warning(f"⚠️ No se pudo cargar la metadata individual: {e}")
+
+        try:
+            summary_df = summarize_basic_stats(build_player_df(player_id))
+        except Exception as e:
+            st.warning(f"⚠️ No se pudo calcular estadísticas básicas: {e}")
+
+        try:
+            label, seasonal, group_curve = predict_and_project_player(player_id)
+        except Exception as e:
+            st.warning(f"⚠️ No se pudo generar proyección: {e}")
+
+        try:
+            fig_stats = plot_player_stats(player_id)
+        except Exception as e:
+            st.warning(f"⚠️ Fallo al generar gráfico de producción: {e}")
+
+        try:
+            fig_minutes = plot_minutes_per_year(player_id)
+        except Exception as e:
+            st.warning(f"⚠️ Fallo al generar gráfico de minutos: {e}")
+
+        try:
+            fig_proj = plot_rating_projection(selected_player, seasonal, group_curve, label)
+        except Exception as e:
+            st.warning(f"⚠️ Fallo al generar gráfico de proyección: {e}")
+
+        try:
+            conclusion_text = generar_conclusion_completa(player_id).replace("## ", "")
+        except Exception as e:
+            st.warning(f"⚠️ No se pudo generar la conclusión IA: {e}")
+
+        time.sleep(sleep_duration)
+
+# ---------------------------
 # 🏠 CONTENIDO PRINCIPAL
 # ---------------------------
 st.markdown("""
@@ -145,59 +177,58 @@ st.markdown("""
     </p>
 """, unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([0.7, 1, 1.8], gap="medium")
+if selected_player:
 
-with col1:
-    if img:
-        st.image(img, use_container_width=True)
-    else:
-        st.info("⚠️ Imagen no disponible para este jugador.")
+    col1, col2, col3 = st.columns([0.7, 1, 1.8], gap="medium")
 
-    if meta:
-        raw_age = str(meta.get("Age", "N/A"))
-        age_display = raw_age.split("-")[0] if "-" in raw_age else raw_age
-        minutos = int(summary_df['Minutos totales'].iloc[0]) if not summary_df.empty else "N/A"
+    with col1:
+        if img:
+            st.image(img, use_container_width=True)
+        else:
+            st.info("⚠️ Imagen no disponible para este jugador.")
+
+        if meta:
+            raw_age = str(meta.get("Age", "N/A"))
+            age_display = raw_age.split("-")[0] if "-" in raw_age else raw_age
+            minutos = int(summary_df['Minutos totales'].iloc[0]) if not summary_df.empty else "N/A"
+            st.markdown(f"""
+            <div class='block-card'>
+                <h3>📋 Perfil del jugador</h3>
+                <p><strong>Nombre:</strong> {selected_player}</p>
+                <p><strong>Edad:</strong> {age_display}</p>
+                <p><strong>Posición:</strong> {meta.get('Position', 'N/A')}</p>
+                <p><strong>Minutos jugados:</strong> {minutos}</p>
+            </div>
+            """, unsafe_allow_html=True)
+
+    with col2:
+        st.markdown("### 📊 Producción Ofensiva")
+        if fig_stats:
+            st.pyplot(fig_stats)
+        else:
+            st.warning("⚠️ No se pudo generar esta gráfica.")
+
+        st.markdown("### ⏱️ Minutos por Año")
+        if fig_minutes:
+            fig_minutes.set_size_inches(6, 3)
+            st.pyplot(fig_minutes)
+        else:
+            st.warning("⚠️ No se pudo generar esta gráfica.")
+
+    with col3:
+        st.markdown("### 📈 Predicción de grupo y evolución")
+        if fig_proj:
+            fig_proj.set_size_inches(6, 4)
+            st.pyplot(fig_proj)
+        else:
+            st.warning("⚠️ No se pudo generar esta gráfica.")
+
+    if conclusion_text:
         st.markdown(f"""
         <div class='block-card'>
-            <h3>📋 Perfil del jugador</h3>
-            <p><strong>Nombre:</strong> {selected_player}</p>
-            <p><strong>Edad:</strong> {age_display}</p>
-            <p><strong>Posición:</strong> {meta.get('Position', 'N/A')}</p>
-            <p><strong>Minutos jugados:</strong> {minutos}</p>
+          <h3>🌠 Conclusiones</h3>
+          <p style="font-size:20px; line-height:1.4;">
+            {conclusion_text}
+          </p>
         </div>
         """, unsafe_allow_html=True)
-
-with col2:
-    st.markdown("### 📊 Producción Ofensiva")
-    if fig_stats:
-        st.pyplot(fig_stats)
-    else:
-        st.warning("⚠️ No se pudo generar esta gráfica.")
-
-    st.markdown("### ⏱️ Minutos por Año")
-    if fig_minutes:
-        fig_minutes.set_size_inches(6, 3)
-        st.pyplot(fig_minutes)
-    else:
-        st.warning("⚠️ No se pudo generar esta gráfica.")
-
-with col3:
-    st.markdown("### 📈 Predicción de grupo y evolución")
-    if fig_proj:
-        fig_proj.set_size_inches(6, 4)
-        st.pyplot(fig_proj)
-    else:
-        st.warning("⚠️ No se pudo generar esta gráfica.")
-
-# ---------------------------
-# 🔮 CONCLUSIONES
-# ---------------------------
-if conclusion_text:
-    st.markdown(f"""
-    <div class='block-card'>
-      <h3>🌠 Conclusiones</h3>
-      <p style="font-size:20px; line-height:1.4;">
-        {conclusion_text}
-      </p>
-    </div>
-    """, unsafe_allow_html=True)

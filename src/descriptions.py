@@ -4,9 +4,11 @@ from player_processing import build_player_df
 from datetime import datetime
 import pandas as pd
 import requests
+import streamlit as st
 
-def generar_conclusion_completa(player_id: str) -> str:
-    fecha_actual = datetime(2025, 5, 23)
+@st.cache_data
+def generar_prompt_conclusion(player_id: str) -> str:
+    fecha_actual = datetime.now()
     fecha_str = fecha_actual.strftime("%d de %B de %Y").lstrip("0").capitalize()
 
     # Modelo y metadatos
@@ -76,8 +78,12 @@ El rating a lo largo de los años ha mostrado subidas y bajadas, pero no debe in
 Para confirmar su proyección, será clave evaluar su evolución en consistencia y aportar con regularidad.  
 Se recomienda un seguimiento continuo y análisis tácticos detallados para confirmar su tendencia positiva a largo plazo.
 """
+    return prompt
 
+def generar_conclusion_completa(player_id: str) -> str:
     try:
+        prompt = generar_prompt_conclusion(player_id)
+
         response = requests.post(
             "https://JuanmaCM7-gemini-endpoint.hf.space/generate",
             json={"prompt": prompt},

@@ -20,7 +20,6 @@ CSV_URLS = {
 @st.cache_data
 def download_csv_from_drive(file_id: str, output_path: Path) -> pd.DataFrame:
     if not output_path.exists():
-        # ✅ Crear carpeta si no existe
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
         url = f"https://drive.google.com/uc?export=download&id={file_id}"
@@ -32,25 +31,29 @@ def download_csv_from_drive(file_id: str, output_path: Path) -> pd.DataFrame:
 
     return pd.read_csv(output_path)
 
-# === Funciones de carga ===
+# === Funciones de carga cacheadas ===
+@st.cache_data
 def load_cleaned_matchlogs() -> pd.DataFrame:
     return download_csv_from_drive(
         CSV_URLS["matches"],
         DATA_DIR / "cleaned_matchlogs.csv"
     )
 
+@st.cache_data
 def load_future_matchlogs() -> pd.DataFrame:
     return download_csv_from_drive(
         CSV_URLS["future_matches"],
         DATA_DIR / "future_stars_cleaned_matchlogs.csv"
     )
 
+@st.cache_data
 def load_cleaned_metadata() -> pd.DataFrame:
     return download_csv_from_drive(
         CSV_URLS["players"],
         DATA_DIR / "cleaned_metadata.csv"
     )
 
+@st.cache_data
 def load_future_metadata() -> pd.DataFrame:
     return download_csv_from_drive(
         CSV_URLS["future_players"],
@@ -76,10 +79,14 @@ def get_name_id_mapping(metadata_df: pd.DataFrame) -> dict[str, str]:
     )
 
 def get_player_image_path(player_name: str, metadata_df: pd.DataFrame) -> Path | None:
-    mapping = get_name_id_mapping(metadata_df)
-    player_id = mapping.get(player_name)
-    if not player_id:
-        return None
+    try:
+        mapping = get_name_id_mapping(metadata_df)
+        player_id = mapping.get(player_name)
+        if not player_id:
+            return None
 
-    img_file = IMG_DIR / f"{player_id}.png"
-    return img_file if img_file.exists() else None
+        img_file = IMG_DIR / f"{player_id}.png"
+        return img_file if img_file.exists() else None
+    except Exception as e:
+        print(f"⚠️ Error al obtener imagen de {player_name}: {e}")
+        return None

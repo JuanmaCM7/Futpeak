@@ -2,7 +2,9 @@
 
 from pathlib import Path
 import joblib
+import streamlit as st
 
+@st.cache_resource
 def load_model_assets(model_dir: Path = Path(__file__).parents[1] / "model"):
     """
     Carga el modelo de clasificación, label encoder, curvas promedio y columnas del modelo.
