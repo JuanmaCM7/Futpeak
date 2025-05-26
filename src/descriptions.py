@@ -56,28 +56,36 @@ def generar_prompt_conclusion(player_id: str) -> str:
 
     # Prompt final
     prompt = f"""
-Informe de Scouting: {player_name} – {fecha_str}
+    🧠 Genera un informe de scouting realista y detallado para el jugador {player_name}, basado en los siguientes datos.  
+    El informe debe ser honesto: si el rendimiento es bajo, se debe reflejar. Si hay signos de estancamiento, menciona eso. No des por hecho que todo es positivo. Usa un lenguaje profesional y concreto.
 
-Clasificación del modelo: {group_label}
+    📅 Fecha del informe: {fecha_str}
 
-El jugador debutó en {debut_year} con {debut_minutes} minutos y {debut_ga} goles + asistencias.  
-Ese primer año, a pesar de la baja participación, mostró eficacia: aportó en pocos minutos, reflejando un buen nivel de adaptación.
+    📌 Datos generales:
+    - Clasificación del modelo: {group_label}
+    - Año de debut: {debut_year}
+    - Producción en el debut: {debut_minutes} minutos | {debut_ga} G+A | Rating: {debut_rating:.2f}
 
-Desde entonces, su progresión ha sido constante.  
-En {peak_year}, alcanzó su año más productivo con {peak_ga} goles + asistencias en {peak_minutes} minutos.  
-Actualmente ({current_year}), está sumando {current_minutes} minutos y {current_ga} G+A, lo que indica que **está cuajando una temporada sólida y de impacto ofensivo**.
+    📈 Mejor año:
+    - Año: {peak_year}
+    - Producción: {peak_minutes} minutos | {peak_ga} G+A | Rating: {peak_rating:.2f}
 
-Su curva de evolución, especialmente en producción ofensiva y carga de minutos, refleja un perfil **en crecimiento**.  
-En términos de rendimiento global, su desarrollo comparado con el grupo proyectado es **{comparativa} la media**, lo que sugiere que puede consolidarse como un jugador diferencial si mantiene esta línea.
+    📉 Año actual:
+    - Año: {current_year}
+    - Producción: {current_minutes} minutos | {current_ga} G+A | Rating: {current_rating:.2f}
 
-El rating a lo largo de los años ha mostrado subidas y bajadas, pero no debe interpretarse de forma aislada:  
-- En su debut, el alto rating respondió a una **gran eficacia con pocos minutos**.  
-- En temporadas de mayor carga, el impacto ofensivo ha crecido, aunque el rating puede haberse estabilizado por el rol más exigente o nuevas responsabilidades.
+    📊 Comparativa con su grupo proyectado:
+    - Su curva está {comparativa} la media del grupo
 
-🎯 En resumen, es un perfil que combina crecimiento, adaptación progresiva y eficacia ofensiva.  
-Para confirmar su proyección, será clave evaluar su evolución en consistencia y aportar con regularidad.  
-Se recomienda un seguimiento continuo y análisis tácticos detallados para confirmar su tendencia positiva a largo plazo.
-"""
+    ✍️ Genera un análisis que comente:
+    - Cómo ha sido la progresión desde el debut
+    - Si hay estancamiento, retroceso o consolidación
+    - Qué potencial muestra realmente hoy (sin exagerar)
+    - En qué debe mejorar, si hay aspectos preocupantes
+    - Si se recomienda seguimiento, fichaje, cesión o precaución
+
+    El estilo debe ser objetivo, claro y útil para un departamento de scouting.
+    """
     return prompt
 
 def generar_conclusion_completa(player_id: str) -> str:
@@ -91,8 +99,10 @@ def generar_conclusion_completa(player_id: str) -> str:
         )
         result = response.json()
         if "result" in result:
-            return result["result"]
+            conclusion = result["result"].replace("**", "")
+            return conclusion
         else:
             return f"❌ Error del servidor IA: {result.get('error', 'Respuesta inesperada')}"
     except Exception as e:
         return f"❌ Error al contactar con la IA: {e}"
+
