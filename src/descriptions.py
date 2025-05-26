@@ -5,10 +5,12 @@ from datetime import datetime
 import pandas as pd
 import requests
 import streamlit as st
+from pytz import timezone
 
 @st.cache_data
 def generar_prompt_conclusion(player_id: str) -> str:
-    fecha_actual = datetime.now()
+    zona_local = timezone("Europe/Madrid")  # O la que corresponda
+    fecha_actual = datetime.now(zona_local)
     fecha_str = fecha_actual.strftime("%d de %B de %Y").lstrip("0").capitalize()
 
     # Modelo y metadatos
