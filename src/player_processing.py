@@ -4,7 +4,7 @@ import pandas as pd
 from data_loader import load_future_matchlogs, load_future_metadata
 from analytics import compute_rating_row
 import streamlit as st
-import re
+
 
 @st.cache_data
 def build_player_df(player_id: str) -> DataFrame:
