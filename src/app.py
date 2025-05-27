@@ -108,6 +108,19 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
     st.markdown("""
+    <h2 style='white-space: nowrap; margin: 0 0 0.25rem 0; color: #ffffff; font-size: 1rem;'>
+        🧙 Consejo
+    </h2>
+    <div style="background-color: rgba(255, 255, 255, 0.06); padding: 1.25rem 1.25rem 1.2rem 1.25rem; border-radius: 16px; margin-bottom: 1.4rem;">
+    <p style="font-size: 0.9rem; color: #ffffff; margin: 0;">
+        Pasa el cursor por el icono <span style="color:#ccc; font-weight:bold;">ℹ️</span> junto a cada título de gráfica  
+        para obtener una explicación generada por inteligencia artificial.
+    </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+    st.markdown("""
         <p style="font-size: 0.85rem; color: #CCCCCC; margin-top: 0.2rem; line-height: 1.2;">
         ⚙️ <em>Herramienta en desarrollo:</em> próximamente añadiremos variables como traspasos, historial de lesiones y más métricas avanzadas.
         </p>
