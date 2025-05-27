@@ -108,3 +108,124 @@ def generar_conclusion_completa(player_id: str) -> str:
     except Exception as e:
         return f"❌ Error al contactar con la IA: {e}"
 
+def generar_explicacion_grafica_ga(player_id: str) -> str:
+    from stats import get_player_stats
+    import requests
+
+    df = get_player_stats(player_id)
+    if df.empty:
+        return "No hay datos suficientes para generar una explicación."
+
+    resumen = df[['year_since_debut', 'Goals', 'Assists', 'G+A']].to_string(index=False)
+
+    prompt = f"""
+Eres un analista de datos especializado en fútbol y tu tarea es explicar una gráfica de producción ofensiva (Goles + Asistencias por año desde el debut) a una persona que no sabe nada de fútbol ni de estadísticas.
+
+Aquí están los datos de la gráfica:
+
+{resumen}
+
+Explica en pocas frases, de forma simple y pedagógica:
+- Qué representa esta gráfica
+- Qué se puede observar del rendimiento del jugador a lo largo del tiempo
+- Si hay alguna tendencia clara (subida, bajada, pico, estancamiento)
+
+No utilices lenguaje técnico. Sé claro y directo.
+"""
+
+    try:
+        response = requests.post(
+            "https://JuanmaCM7-gemini-endpoint.hf.space/generate",
+            json={"prompt": prompt},
+            timeout=30
+        )
+        result = response.json()
+        if "result" in result:
+            return result["result"].replace("**", "").strip()
+        else:
+            return f"❌ Error del servidor IA: {result.get('error', 'Respuesta inesperada')}"
+    except Exception as e:
+        return f"❌ Error al contactar con la IA: {e}"
+
+def generar_explicacion_minutos_por_ano(player_id: str) -> str:
+    from stats import get_player_stats
+    import requests
+
+    df = get_player_stats(player_id)
+    if df.empty:
+        return "No hay datos suficientes para generar una explicación."
+
+    resumen = df[['year_since_debut', 'Minutes']].to_string(index=False)
+
+    prompt = f"""
+Eres un analista de datos que debe explicar una gráfica de minutos jugados por año desde el debut de un jugador.
+
+Aquí tienes los datos:
+
+{resumen}
+
+Explica brevemente y de forma sencilla:
+- Qué muestra esta gráfica
+- Qué conclusiones simples se pueden sacar (por ejemplo: jugó más con el tiempo, hubo un bajón, etc.)
+- Si hay alguna tendencia o cambio importante en la cantidad de minutos jugados
+
+Hazlo con un lenguaje claro, como si hablaras con alguien sin experiencia en análisis deportivo.
+"""
+
+    try:
+        response = requests.post(
+            "https://JuanmaCM7-gemini-endpoint.hf.space/generate",
+            json={"prompt": prompt},
+            timeout=30
+        )
+        result = response.json()
+        if "result" in result:
+            return result["result"].replace("**", "").strip()
+        else:
+            return f"❌ Error del servidor IA: {result.get('error', 'Respuesta inesperada')}"
+    except Exception as e:
+        return f"❌ Error al contactar con la IA: {e}"
+
+def generar_explicacion_curva_evolucion(player_id: str) -> str:
+    from model_runner import predict_and_project_player
+    import requests
+
+    try:
+        label, seasonal_df, group_curve = predict_and_project_player(player_id)
+        resumen = seasonal_df[['year_since_debut', 'rating_per_90']].to_string(index=False)
+        resumen_grupo = group_curve[['year_since_debut', 'rating_avg']].to_string(index=False)
+    except Exception:
+        return "No se pudo generar la explicación por falta de datos."
+
+    prompt = f"""
+Eres un analista de datos y tu tarea es explicar una gráfica de evolución del rendimiento (rating por 90 minutos) de un jugador desde su debut.
+
+Aquí tienes los datos de la curva del jugador:
+{resumen}
+
+Y aquí la curva promedio de su grupo de desarrollo:
+{resumen_grupo}
+
+Explica en lenguaje simple:
+- Qué representa esta curva
+- Cómo ha evolucionado su rendimiento a lo largo de los años
+- Si hay algún año pico, mejora progresiva o estancamiento
+- Cómo se compara su curva con la del grupo
+
+No uses jerga técnica, habla como si lo explicaras a alguien ajeno al fútbol profesional.
+"""
+
+    try:
+        response = requests.post(
+            "https://JuanmaCM7-gemini-endpoint.hf.space/generate",
+            json={"prompt": prompt},
+            timeout=30
+        )
+        result = response.json()
+        if "result" in result:
+            return result["result"].replace("**", "").strip()
+        else:
+            return f"❌ Error del servidor IA: {result.get('error', 'Respuesta inesperada')}"
+    except Exception as e:
+        return f"❌ Error al contactar con la IA: {e}"
+

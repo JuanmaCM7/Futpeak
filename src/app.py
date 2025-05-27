@@ -18,7 +18,7 @@ from stats import (
     plot_minutes_per_year,
     plot_rating_projection
 )
-from descriptions import generar_conclusion_completa
+from descriptions import generar_conclusion_completa, generar_explicacion_grafica_ga, generar_explicacion_minutos_por_ano, generar_explicacion_curva_evolucion
 from styles.theme import apply_background
 
 # ---------------------------
@@ -194,13 +194,78 @@ if selected_player:
                 """, unsafe_allow_html=True)
 
         with col2:
-            st.markdown("### 📊 Producción Ofensiva")
+            # 🧠 Generar explicación IA de la gráfica de G+A
+            from descriptions import generar_explicacion_grafica_ga
+            try:
+                explicacion_ia_raw = generar_explicacion_grafica_ga(player_id)
+                explicacion_ia = explicacion_ia_raw.replace('"', '').replace('\n', ' ').strip()
+            except Exception as e:
+                explicacion_ia = "⚠️ No se pudo generar la explicación."
+
+            # 🎨 Estilo tooltip elegante + título con ícono
+            st.markdown(f"""
+            <style>
+            .tooltip-container {{
+            position: relative;
+            display: inline-block;
+            }}
+
+            .tooltip-container .tooltip-text {{
+            visibility: hidden;
+            max-width: 360px;
+            background-color: #333;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            top: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            }}
+
+            .tooltip-container:hover .tooltip-text {{
+            visibility: visible;
+            opacity: 1;
+            }}
+            </style>
+
+            <h3 style='display: flex; align-items: center; gap: 6px;'>
+            📊 Producción Ofensiva
+            <div class="tooltip-container">
+                <span style="cursor: help; font-size: 0.9rem; color: #ccc;">ℹ️</span>
+                <div class="tooltip-text">{explicacion_ia}</div>
+            </div>
+            </h3>
+            """, unsafe_allow_html=True)
+
+            # 🎯 Mostrar gráfica G+A
             if fig_stats:
                 st.pyplot(fig_stats)
             else:
                 st.warning("⚠️ No se pudo generar esta gráfica.")
 
-            st.markdown("### ⏱️ Minutos por Año")
+            # ⏱️ Gráfica de minutos
+            # 🧠 Explicación IA para minutos por año
+            try:
+                explicacion_min_raw = generar_explicacion_minutos_por_ano(player_id)
+                explicacion_min = explicacion_min_raw.replace('"', '').replace('\n', ' ').strip()
+            except Exception as e:
+                explicacion_min = "⚠️ No se pudo generar la explicación."
+
+            st.markdown(f"""
+            <h3 style='display: flex; align-items: center; gap: 6px;'>
+            ⏱️ Minutos por Año
+            <div class="tooltip-container">
+                <span style="cursor: help; font-size: 0.9rem; color: #ccc;">ℹ️</span>
+                <div class="tooltip-text">{explicacion_min}</div>
+            </div>
+            </h3>
+            """, unsafe_allow_html=True)
             if fig_minutes:
                 fig_minutes.set_size_inches(6, 3)
                 st.pyplot(fig_minutes)
@@ -208,12 +273,64 @@ if selected_player:
                 st.warning("⚠️ No se pudo generar esta gráfica.")
 
         with col3:
-            st.markdown("### 📈 Predicción de grupo y evolución")
+            # 🧠 Explicación IA para la gráfica de evolución
+           
+            try:
+                explicacion_proj_raw = generar_explicacion_curva_evolucion(player_id)
+                explicacion_proj = explicacion_proj_raw.replace('"', '').replace('\n', ' ').strip()
+            except Exception as e:
+                explicacion_proj = "⚠️ No se pudo generar la explicación."
+
+            # 🎨 Título con tooltip para curva de evolución
+            st.markdown(f"""
+            <style>
+            .tooltip-container {{
+            position: relative;
+            display: inline-block;
+            }}
+
+            .tooltip-container .tooltip-text {{
+            visibility: hidden;
+            width: 300px;
+            background-color: #333;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            top: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: normal;
+            word-wrap: break-word;
+            }}
+
+            .tooltip-container:hover .tooltip-text {{
+            visibility: visible;
+            opacity: 1;
+            }}
+            </style>
+
+            <h3 style='display: flex; align-items: center; gap: 6px;'>
+            📈 Predicción de grupo y evolución
+            <div class="tooltip-container">
+                <span style="cursor: help; font-size: 0.9rem; color: #ccc;">ℹ️</span>
+                <div class="tooltip-text">{explicacion_proj}</div>
+            </div>
+            </h3>
+            """, unsafe_allow_html=True)
+
             if fig_proj:
                 fig_proj.set_size_inches(6, 4)
                 st.pyplot(fig_proj)
             else:
                 st.warning("⚠️ No se pudo generar esta gráfica.")
+
 
         if conclusion_text:
             st.markdown(f"""
