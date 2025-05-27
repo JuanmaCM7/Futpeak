@@ -196,6 +196,7 @@ if selected_player:
                 raw_age = str(meta.get("Age", "N/A"))
                 age_display = raw_age.split("-")[0] if "-" in raw_age else raw_age
                 minutos = int(summary_df['Minutos totales'].iloc[0]) if not summary_df.empty else "N/A"
+                
                 st.markdown(f"""
                 <div class='block-card'>
                     <h3>📋 Perfil del jugador</h3>
