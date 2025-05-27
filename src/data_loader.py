@@ -77,7 +77,7 @@ def get_name_id_mapping(metadata_df: pd.DataFrame) -> dict[str, str]:
             metadata_df["Player_ID"].astype(str)
         )
     )
-
+@st.cache_data
 def get_player_image_path(player_name: str, metadata_df: pd.DataFrame) -> Path | None:
     try:
         mapping = get_name_id_mapping(metadata_df)
