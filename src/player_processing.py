@@ -157,4 +157,16 @@ def get_player_stats(player_id: str) -> DataFrame:
     df = build_player_df(player_id)
     return aggregate_stats_by_year(df)
 
+@st.cache_data
+def traducir_posicion(pos_raw: str) -> str:
+    position_map = {
+        'AM': 'Mediocentro ofensivo',
+        'ST': 'Delantero centro',
+        'MF': 'Centrocampista',
+        'RW': 'Extremo derecho'
+    }
 
+    if not pos_raw or pd.isna(pos_raw):
+        return "Desconocida"
+
+    return position_map.get(pos_raw.strip(), pos_raw.strip())

@@ -12,7 +12,7 @@ from data_loader import (
     get_player_image_path
 )
 from model_runner import predict_and_project_player
-from player_processing import build_player_df, summarize_basic_stats
+from player_processing import build_player_df, summarize_basic_stats, traducir_posicion
 from stats import (
     plot_player_stats,
     plot_minutes_per_year,
@@ -201,7 +201,7 @@ if selected_player:
                     <h3>📋 Perfil del jugador</h3>
                     <p><strong>Nombre:</strong> {selected_player}</p>
                     <p><strong>Edad:</strong> {age_display}</p>
-                    <p><strong>Posición:</strong> {meta.get('Position', 'N/A')}</p>
+                    <p><strong>Posición:</strong> {traducir_posicion(meta.get('Position', 'N/A'))}</p>
                     <p><strong>Minutos jugados:</strong> {minutos}</p>
                 </div>
                 """, unsafe_allow_html=True)
