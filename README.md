@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://futpeak.streamlit.app/">
-    <img src="src/assets/Banner.png" alt="Futpeak Banner">
+    <img src="Recursos_gráficos/Banner.png" alt="Futpeak Banner">
   </a>
 </p>
 
@@ -71,7 +71,7 @@ Donde hay datos y riesgo, hay oportunidad de anticipar.
 
 <p align="center">
   <a href="https://futpeak.streamlit.app/">
-    <img src="Recursos_gráficos\App_LamineYamal.png" alt="Demo de la app" width="100%">
+    <img src="Recursos_gráficos/App_LamineYamal.png" alt="Demo de la app" width="100%">
   </a>
 </p>
 
