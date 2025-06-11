@@ -12,6 +12,5 @@ __pycache__/
 .env
 .streamlit/config.toml
 psd/
-FUTPEAK.pdf
-Infografía.pdf
+*.pdf
 Recursos_gráficos/
