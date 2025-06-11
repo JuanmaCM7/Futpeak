@@ -13,4 +13,4 @@ __pycache__/
 .streamlit/config.toml
 psd/
 *.pdf
-Recursos_gráficos/
+graphic_res/
