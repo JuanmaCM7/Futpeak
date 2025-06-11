@@ -11,3 +11,6 @@ futpeak-clean/
 __pycache__/
 .env
 .streamlit/config.toml
+psd/
+.pdf
+Recursos_gráficos/
