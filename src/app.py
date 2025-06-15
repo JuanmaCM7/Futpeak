@@ -194,12 +194,21 @@ if selected_player:
 
             if meta:
                 raw_age = str(meta.get("Age", "N/A"))
+                club = meta.get("Club", "N/A")
                 age_display = raw_age.split("-")[0] if "-" in raw_age else raw_age
                 minutos = int(summary_df['Minutos totales'].iloc[0]) if not summary_df.empty else "N/A"
                 st.markdown(f"""
-                <div class='block-card'>
-                    <h3>📋 Perfil del jugador</h3>
+                <div class='block-card' style="
+                    min-height: 280px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    line-height: 1.8;
+                    padding: 1.8rem 1.5rem;
+                ">
+                    <h3 style="margin-bottom: 1rem;">📋 Perfil del jugador</h3>
                     <p><strong>Nombre:</strong> {selected_player}</p>
+                    <p><strong>Equipo:</strong> {club}</p>
                     <p><strong>Edad:</strong> {age_display}</p>
                     <p><strong>Posición:</strong> {traducir_posicion(meta.get('Position', 'N/A'))}</p>
                     <p><strong>Minutos jugados:</strong> {minutos}</p>
