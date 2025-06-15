@@ -21,7 +21,7 @@
 > En el mundo del fútbol, se invierte antes de conocer el rendimiento real de un fichaje.  
 > ¿Y si se pudiera anticipar qué jugador joven llegará lejos… y cuándo?
 
-En 2023, los clubes gastaron más de **8.500 millones de euros** en fichajes internacionales.  
+En 2023, los clubes gastaron más de **8.800 millones de euros** en fichajes internacionales.  
 Gran parte de ese gasto se destinó a jugadores **menores de 24 años**: apuestas sin garantías de rendimiento inmediato.  
 Y lo más preocupante: según *The Times*, entre el **30 % y el 50 %** de los fichajes **no cumplen las expectativas deportivas**.
 
@@ -31,7 +31,7 @@ Es una herramienta de predicción que analiza datos reales —**minutos, edad, i
 
 Ya hemos desarrollado un **MVP funcional** que permite seleccionar un jugador y visualizar su perfil, su curva de rendimiento y una proyección ajustada.  
 En pruebas internas, el modelo ha mostrado una **precisión en torno al 75 %** al predecir si un jugador triunfará y cuándo.  
-Jugadores como **Lamine Yamal, Désiré Doué o Jamal Musiala** ya han pasado por nuestro sistema.
+Jugadores como **Lamine Yamal, Désiré Doué o Endrick** ya han pasado por nuestro sistema.
 
 💼 **¿Nuestro modelo de negocio?**  
 Licencias **SaaS** para clubes, agencias y analistas, con planes por volumen y uso, así como un plan *freemium* con una pequeña base de datos de prueba.
@@ -39,8 +39,10 @@ Licencias **SaaS** para clubes, agencias y analistas, con planes por volumen y u
 🧠 **Y esto es solo el comienzo.**
 
 La misma lógica de Futpeak puede aplicarse en otros sectores: startups, talento digital o inversión en personas.  
+
 Donde hay datos y riesgo, hay oportunidad de anticipar.  
-**Futpeak convierte datos en decisiones, antes de que el talento hable.**
+
+**Porque mientras otros describen el pasado y el presente… nosotros ayudamos a ver el futuro.**
 
 ---
 
@@ -110,24 +112,25 @@ streamlit run src/app.py
 ```
 Futpeak/
 ├── model/
-│ └── curvas_promedio.joblib
+│ ├── curvas_promedio.joblib
+│ ├── ...
 ├── notebooks/
 ├── src/
 │ ├── app.py
 │ ├── model_runner.py
 │ ├── stats.py
+│ ├── ...
 │ ├── assets/
 │ │ └── player_faces/
 ├── requirements.txt
+├── environment.yaml
 ├── README.md
-├── Banner.png
-└── App.png
 ```
 ---
 
 ## 🧠 Modelo de predicción
 
-🎯 Clasificador multiclase RandomForest entrenado con trayectorias de cientos de jugadores
+🎯 Modelo multiclase LightGBM entrenado con trayectorias de miles de jugadores
 
 📊 Ajuste de proyección basado en rating real vs. curva promedio
 
